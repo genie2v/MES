@@ -1,0 +1,10 @@
+C:\Users\jy\Documents\MES\MES_Client\MES_Client\bin\Debug\MES_Client.exe.config
+C:\Users\jy\Documents\MES\MES_Client\MES_Client\bin\Debug\MES_Client.exe
+C:\Users\jy\Documents\MES\MES_Client\MES_Client\bin\Debug\MES_Client.pdb
+C:\Users\jy\Documents\MES\MES_Client\MES_Client\obj\Debug\MES_Client.csprojResolveAssemblyReference.cache
+C:\Users\jy\Documents\MES\MES_Client\MES_Client\obj\Debug\MES_Client.CreateLot.resources
+C:\Users\jy\Documents\MES\MES_Client\MES_Client\obj\Debug\MES_Client.Form1.resources
+C:\Users\jy\Documents\MES\MES_Client\MES_Client\obj\Debug\MES_Client.Properties.Resources.resources
+C:\Users\jy\Documents\MES\MES_Client\MES_Client\obj\Debug\MES_Client.csproj.GenerateResource.Cache
+C:\Users\jy\Documents\MES\MES_Client\MES_Client\obj\Debug\MES_Client.exe
+C:\Users\jy\Documents\MES\MES_Client\MES_Client\obj\Debug\MES_Client.pdb
