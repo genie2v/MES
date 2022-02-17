@@ -122,7 +122,6 @@
             this.comboBoxOper.Name = "comboBoxOper";
             this.comboBoxOper.Size = new System.Drawing.Size(149, 23);
             this.comboBoxOper.TabIndex = 8;
-            this.comboBoxOper.DropDown += new System.EventHandler(this.comboBoxOper_DropDown);
             // 
             // textBoxLotId
             // 

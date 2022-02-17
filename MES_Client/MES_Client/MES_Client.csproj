@@ -85,6 +85,12 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="ViewLotHistory.resx">
+      <DependentUpon>ViewLotHistory.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ViewLotList.resx">
+      <DependentUpon>ViewLotList.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
