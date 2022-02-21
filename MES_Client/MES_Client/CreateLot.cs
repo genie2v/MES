@@ -16,7 +16,7 @@ namespace MES_Client
     public partial class CreateLot : Form
     {
         TcpClient client = null;
-        NetworkStream ns = null;
+        NetworkStream ns = null; 
         StreamWriter writer = null;
         StreamReader reader = null;
 
@@ -26,79 +26,49 @@ namespace MES_Client
             this.ActiveControl = textBoxLotId;
 
             client = new TcpClient("localhost", 8000);
-            //if (client.Connected) MessageBox.Show("Server Connected.");
+            if (client.Connected) MessageBox.Show("Server Connected.");
             ns = client.GetStream();
             writer = new StreamWriter(ns);
             reader = new StreamReader(ns);
         }
-        //void fillOper() 
-        //{
-        //    String selOper = labelOper.Text.ToString().ToLower();
-        //    writer.WriteLine(selOper);
-        //    writer.Flush();
-        //    //MessageBox.Show(selOper + "를 전송");
-        //    //MessageBox.Show(selOper);
-        //    while (true)
-        //    {
-        //        receive = reader.ReadLine();
-        //        if (receive == null) break;
-        //        comboBoxOper.Items.Add(receive);
-        //        //MessageBox.Show(receive);
-        //    }
-        //}
-        //void fillFlow()
-        //{
-        //    String selFlow = labelFlow.Text.ToString().ToLower();
-        //    writer.WriteLine(selFlow);
-        //    writer.Flush();
-        //    MessageBox.Show(selFlow);
-        //    while (true)
-        //    {
-        //        receive = reader.ReadLine();
-        //        if (receive == null) break;
-        //        comboBoxFlow.Items.Add(receive);
-        //    }
-        //}
+        
         private void CreateLot_Load(object sender, EventArgs e)
         {
-            //fillOper();
-            //fillFlow();
+            
             String selOper = labelOper.Text.ToString().ToLower();
             String selFlow = labelFlow.Text.ToString().ToLower();
             String selProd = labelProd.Text.ToString().ToLower();
+            String receive = String.Empty;
 
-            String[] combo = { selOper, selFlow, selProd };
+            writer.WriteLine("search_combo");
+            writer.Flush();
 
-            foreach (String s in combo) 
-            {
-                // selFlow로 안넘어감 // while문 탈출이 안됨
-                writer.WriteLine(s);
-                writer.Flush();
-                MessageBox.Show(s);
-                // 임시방편으로 탈출을 위한 i
-                int i = 0;
-                while (true)
-                {
-                    i++;
-                    String receive = reader.ReadLine();
-                    
-                    MessageBox.Show(receive);
-                    if (s == "oper")
-                    {
-                        comboBoxOper.Items.Add(receive);
-                    }
-                    else if (s == "flow")
-                    {
-                        comboBoxFlow.Items.Add(receive);
-                    }
-                    else if (s == "prod")
-                    {
-                        comboBoxProd.Items.Add(receive);
-                    }
-                    if (i == 3) break;
-                }
-                MessageBox.Show("while문 탈출");
-            }
+            writer.WriteLine(selOper);
+            writer.Flush();
+            //MessageBox.Show(selOper);
+            receive = reader.ReadLine();
+            //MessageBox.Show(receive);
+            string[] oper = receive.Split(',');
+            foreach (string s in oper) comboBoxOper.Items.Add(s);
+
+            writer.WriteLine(selFlow);
+            writer.Flush();
+            //MessageBox.Show(selFlow);
+            receive = reader.ReadLine();
+            //MessageBox.Show(receive);
+            string[] flow = receive.Split(',');
+            foreach (string s in flow) comboBoxFlow.Items.Add(s);
+
+            writer.WriteLine(selProd);
+            writer.Flush();
+            //MessageBox.Show(selProd);
+            receive = reader.ReadLine();
+            //MessageBox.Show(receive);
+            string[] prod = receive.Split(',');
+            foreach (string s in prod) comboBoxProd.Items.Add(s);
+
+            writer.Close();
+            reader.Close();
         }
 
         private void textBoxLotId_KeyPress(object sender, KeyPressEventArgs e)
@@ -123,9 +93,17 @@ namespace MES_Client
             String prod = comboBoxProd.Text.ToString();
             String prod_qty = textBoxProdQty.Text.ToString();
 
-            String[] insertData = {id,oper,flow,prod,prod_qty};
+            // String[] insertData = {id,oper,flow,prod,prod_qty};
 
-            foreach (String s in insertData) MessageBox.Show(s);
+            // foreach (String s in insertData) MessageBox.Show(s);
+            String insertData = id + "," + oper + "," + flow + "," + prod + "," + prod_qty;
+            writer.WriteLine("create_lot");
+            writer.Flush();
+            writer.WriteLine(insertData);
+            writer.Flush();
+            MessageBox.Show("insertData");
+            String receive = reader.ReadLine();
+            MessageBox.Show(receive);
         }
     }
 }

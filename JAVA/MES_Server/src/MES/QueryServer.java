@@ -26,7 +26,8 @@ public class QueryServer {
 		OutputStreamWriter outputStreamWriter = null;
 		BufferedWriter bufferedWriter = null;
 		BufferedReader bufferedReader = null;
-		String msg = null;
+		String msg = "";
+		String action = "";
 
 		serverSocket = new ServerSocket(8000);
 
@@ -43,37 +44,39 @@ public class QueryServer {
 				bufferedReader = new BufferedReader(inputStreamReader);
 				bufferedWriter = new BufferedWriter(outputStreamWriter);
 
-				// while문 탈출을 위한 i(임시)
-				int i =0;
-				while (true) {
-					i++;
-					String response = null;
-					msg = bufferedReader.readLine();
-					
-					// while 탈출 안됨
-//					if (msg == null)
-//						break;
-					System.out.println(msg);
+				//action = bufferedReader.readLine();
+				//if (action.equals("search_combo")) {
+					while (true) {
+						String response = "";
+						msg = bufferedReader.readLine();
 
-					try {
-						String selRec = "select " + msg + " from " + msg + "_inf";
+						if (msg == null)
+							break;
 
-						pstm = conn.prepareStatement(selRec);
-						rs = pstm.executeQuery();
+						System.out.println(msg);
 
-						while (rs.next()) {
-							response = rs.getString(1);
+						try {
+							String selRec = "select " + msg + " from " + msg + "_inf";
+
+							pstm = conn.prepareStatement(selRec);
+							rs = pstm.executeQuery();
+
+							while (rs.next()) {
+								response += rs.getString(1) + ",";
+							}
+
+							response = response.substring(0, response.length() - 1);
+							System.out.println(response);
 							bufferedWriter.write(response);
 							bufferedWriter.newLine();
 							bufferedWriter.flush();
-							System.out.println(response);
-						}		
-						if(i==3) break;
-					} catch (SQLException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						} catch (SQLException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 					}
-				}
+				//}
+
 
 				try {
 					if (pstm != null)
@@ -94,7 +97,6 @@ public class QueryServer {
 				bufferedWriter.close();
 				System.out.println("Cient 접속 해제");
 				break;
-
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
