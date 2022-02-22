@@ -24,51 +24,57 @@ namespace MES_Client
         {
             InitializeComponent();
             this.ActiveControl = textBoxLotId;
-
+        }
+        
+        private void CreateLot_Load(object sender, EventArgs e)
+        {
             client = new TcpClient("localhost", 8000);
             if (client.Connected) MessageBox.Show("Server Connected.");
             ns = client.GetStream();
             writer = new StreamWriter(ns);
             reader = new StreamReader(ns);
-        }
-        
-        private void CreateLot_Load(object sender, EventArgs e)
-        {
+
+            writer.WriteLine("get_combo");
+            writer.Flush();
             
-            String selOper = labelOper.Text.ToString().ToLower();
-            String selFlow = labelFlow.Text.ToString().ToLower();
-            String selProd = labelProd.Text.ToString().ToLower();
-            String receive = String.Empty;
+            fillOper();
+            fillFlow();
+            fillProd();
+            
+            
+            //String request = "action=get_combo;para1=oper;para2=flow;para3=prod";
+            //writer.WriteLine(request);
+            //writer.Flush();          
+        }
 
-            writer.WriteLine("search_combo");
+        void fillOper() 
+        {
+            writer.WriteLine("oper");
             writer.Flush();
-
-            writer.WriteLine(selOper);
-            writer.Flush();
-            //MessageBox.Show(selOper);
-            receive = reader.ReadLine();
-            //MessageBox.Show(receive);
+            String receive = reader.ReadLine();
+            MessageBox.Show(receive);
             string[] oper = receive.Split(',');
             foreach (string s in oper) comboBoxOper.Items.Add(s);
+        }
 
-            writer.WriteLine(selFlow);
+        void fillFlow()
+        {
+            writer.WriteLine("flow");
             writer.Flush();
-            //MessageBox.Show(selFlow);
-            receive = reader.ReadLine();
-            //MessageBox.Show(receive);
-            string[] flow = receive.Split(',');
-            foreach (string s in flow) comboBoxFlow.Items.Add(s);
+            String receive = reader.ReadLine();
+            MessageBox.Show(receive);
+            string[] oper = receive.Split(',');
+            foreach (string s in oper) comboBoxFlow.Items.Add(s);
+        }
 
-            writer.WriteLine(selProd);
+        void fillProd()
+        {
+            writer.WriteLine("prod");
             writer.Flush();
-            //MessageBox.Show(selProd);
-            receive = reader.ReadLine();
-            //MessageBox.Show(receive);
-            string[] prod = receive.Split(',');
-            foreach (string s in prod) comboBoxProd.Items.Add(s);
-
-            writer.Close();
-            reader.Close();
+            String receive = reader.ReadLine();
+            MessageBox.Show(receive);
+            string[] oper = receive.Split(',');
+            foreach (string s in oper) comboBoxProd.Items.Add(s);
         }
 
         private void textBoxLotId_KeyPress(object sender, KeyPressEventArgs e)
@@ -87,21 +93,31 @@ namespace MES_Client
 
         private void btnCreate_Click(object sender, EventArgs e)
         {
+            client = new TcpClient("localhost", 8000);
+            if (client.Connected) MessageBox.Show("Server Connected.");
+            ns = client.GetStream();
+            writer = new StreamWriter(ns);
+            reader = new StreamReader(ns);
+
+            writer.WriteLine("create_lot");
+            writer.Flush();
+
+            create_lot();
+        }
+
+        void create_lot()
+        {
             String id = textBoxLotId.Text.ToString();
             String oper = comboBoxOper.Text.ToString();
             String flow = comboBoxFlow.Text.ToString();
             String prod = comboBoxProd.Text.ToString();
             String prod_qty = textBoxProdQty.Text.ToString();
 
-            // String[] insertData = {id,oper,flow,prod,prod_qty};
+            String insertData = "'" + id + "','" + oper + "','" + flow + "','" + prod + "','" + prod_qty + "'";
 
-            // foreach (String s in insertData) MessageBox.Show(s);
-            String insertData = id + "," + oper + "," + flow + "," + prod + "," + prod_qty;
-            writer.WriteLine("create_lot");
-            writer.Flush();
             writer.WriteLine(insertData);
             writer.Flush();
-            MessageBox.Show("insertData");
+            MessageBox.Show(insertData);
             String receive = reader.ReadLine();
             MessageBox.Show(receive);
         }
