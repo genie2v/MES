@@ -63,10 +63,15 @@ public class QueryServer {
 						select_prod();
 				} else if (action.equals("create_lot")) {
 					create_lot();
-				} else if(action.equals("get_his")){
+				} else if (action.equals("get_his")) {
 					get_his();
+				} else if (action.equals("get_qty")) {
+					get_qty();
+				} else if (action.equals("get_lotlist")) {
+					get_lotlist();
 				}
 
+				// 요청을 한 줄로 받아왔을시 split
 //				msg = bufferedReader.readLine();
 //				System.out.println(msg);
 //
@@ -154,8 +159,46 @@ public class QueryServer {
 		bufferedWriter.newLine();
 		bufferedWriter.flush();
 	}
-	
-	public static void get_his() {
-		System.out.println("history");
+
+	public static void get_his() throws IOException, SQLException {
+		String searchId = bufferedReader.readLine();
+		System.out.println(searchId);
+
+		String countQuery = "Select count(lot) from lot_his where lot='" + searchId + "'";
+		pstm = conn.prepareStatement(countQuery);
+		rs = pstm.executeQuery();
+		String count = "";
+		while (rs.next())
+			count = rs.getString(1);
+		bufferedWriter.write(count);
+		bufferedWriter.newLine();
+		bufferedWriter.flush();
+		System.out.println(count);
+
+		String searchHis = "Select lot,oper,flow,prod,prod_qty from lot_his where lot = '" + searchId + "'";
+		pstm = conn.prepareStatement(searchHis);
+		rs = pstm.executeQuery();
+		String response;
+		while (rs.next()) {
+			response = "";
+			response += rs.getString("lot") + ",";
+			response += rs.getString("oper") + ",";
+			response += rs.getString("flow") + ",";
+			response += rs.getString("prod") + ",";
+			response += rs.getString("prod_qty");
+
+			System.out.println(response);
+			bufferedWriter.write(response);
+			bufferedWriter.newLine();
+			bufferedWriter.flush();
+		}
+	}
+
+	public static void get_qty() throws SQLException, IOException {
+		
+	}
+
+	public static void get_lotlist() throws IOException, SQLException {
+		
 	}
 }

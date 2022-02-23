@@ -29,7 +29,7 @@ namespace MES_Client
         private void CreateLot_Load(object sender, EventArgs e)
         {
             client = new TcpClient("localhost", 8000);
-            if (client.Connected) MessageBox.Show("Server Connected.");
+            //if (client.Connected) MessageBox.Show("Server Connected.");
             ns = client.GetStream();
             writer = new StreamWriter(ns);
             reader = new StreamReader(ns);
@@ -52,7 +52,7 @@ namespace MES_Client
             writer.WriteLine("oper");
             writer.Flush();
             String receive = reader.ReadLine();
-            MessageBox.Show(receive);
+            //MessageBox.Show(receive);
             string[] oper = receive.Split(',');
             foreach (string s in oper) comboBoxOper.Items.Add(s);
         }
@@ -62,7 +62,7 @@ namespace MES_Client
             writer.WriteLine("flow");
             writer.Flush();
             String receive = reader.ReadLine();
-            MessageBox.Show(receive);
+            //MessageBox.Show(receive);
             string[] oper = receive.Split(',');
             foreach (string s in oper) comboBoxFlow.Items.Add(s);
         }
@@ -72,7 +72,7 @@ namespace MES_Client
             writer.WriteLine("prod");
             writer.Flush();
             String receive = reader.ReadLine();
-            MessageBox.Show(receive);
+            //MessageBox.Show(receive);
             string[] oper = receive.Split(',');
             foreach (string s in oper) comboBoxProd.Items.Add(s);
         }
@@ -94,7 +94,7 @@ namespace MES_Client
         private void btnCreate_Click(object sender, EventArgs e)
         {
             client = new TcpClient("localhost", 8000);
-            if (client.Connected) MessageBox.Show("Server Connected.");
+            //if (client.Connected) MessageBox.Show("Server Connected.");
             ns = client.GetStream();
             writer = new StreamWriter(ns);
             reader = new StreamReader(ns);
