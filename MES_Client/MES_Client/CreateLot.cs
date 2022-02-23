@@ -45,6 +45,11 @@ namespace MES_Client
             //String request = "action=get_combo;para1=oper;para2=flow;para3=prod";
             //writer.WriteLine(request);
             //writer.Flush();          
+
+            
+            fillOperTest();
+            //or
+            bindCombo("action=get_oper", comboBoxOper);
         }
 
         void fillOper() 
@@ -56,6 +61,44 @@ namespace MES_Client
             string[] oper = receive.Split(',');
             foreach (string s in oper) comboBoxOper.Items.Add(s);
         }
+
+        void fillOperTest() 
+        {
+            writer.WriteLine("action=get_oper");
+
+            // 나중에 서버로 보낼 데이터가 필요하다면 예시
+            // writer.WriteLine("action=get_oper;lot=lot1;flow=flow1");
+            writer.Flush();
+            String receive = reader.ReadLine();
+            //MessageBox.Show(receive);
+            string[] oper = receive.Split(',');
+
+            // 코드는 풀어서 표현한다
+            for (int i = 0; i < oper.length; i++)
+            {
+                comboBoxOper.Items.Add(oper[i]);
+            }
+        }
+
+        void bindCombo(string strPara, Combobox cbBox) 
+        {
+
+            writer.WriteLine(strPara);
+
+            // 나중에 서버로 보낼 데이터가 필요하다면 예시
+            // writer.WriteLine("action=get_oper;lot=lot1;flow=flow1");
+            writer.Flush();
+            String receive = reader.ReadLine();
+            //MessageBox.Show(receive);
+            string[] oper = receive.Split(',');
+
+            // 코드는 풀어서 표현한다
+            for (int i = 0; i < oper.length; i++)
+            {
+                cbBox.Items.Add(oper[i]);
+            }
+        }
+
 
         void fillFlow()
         {

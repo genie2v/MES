@@ -71,6 +71,40 @@ public class QueryServer {
 					get_lotlist();
 				}
 
+
+				String strReadPara = bufferedReader.readLine();
+
+				//ex) action=get_combo;para1=oper;para2=flow;para3=prod
+				String[] strParaList = strReadPara.split(";");
+				String strAction = strParaList[0];
+				// 맨 앞 para 가 action
+				if (strAction.equals("get_oper")) {
+					select_oper();
+				} else if (strAction.equals("get_testSample")) {
+
+					String strPara1 = "";
+					String strPara2 = "";
+					String strPara3 = "";
+
+					//ex) action=get_combo;para1=oper;para2=flow;para3=prod
+					for (int i = 1; i < strParaList.length; i++) {
+
+						String strParaValue = strParaList[i].split("=");
+						if (strParaList[i].equal("para1")) {
+							strPara1 = strParaValue[1];
+						} else if (strParaList[i].equal("para2")) {
+							strPara2 = strParaValue[1];
+						} else if (strParaList[i].equal("para3")) {
+							strPara3 = strParaValue[1];
+						}
+					}
+
+					// do something
+					// select_sample(strPara1, strPara2, strPara3);
+					// or select_sample(strParaList);
+				}
+
+
 				// 요청을 한 줄로 받아왔을시 split
 //				msg = bufferedReader.readLine();
 //				System.out.println(msg);
