@@ -46,10 +46,11 @@ namespace MES_Client
             //writer.WriteLine(request);
             //writer.Flush();          
 
-            
+            /*
             fillOperTest();
             //or
             bindCombo("action=get_oper", comboBoxOper);
+            */
         }
 
         void fillOper() 
@@ -62,6 +63,7 @@ namespace MES_Client
             foreach (string s in oper) comboBoxOper.Items.Add(s);
         }
 
+        /*
         void fillOperTest() 
         {
             writer.WriteLine("action=get_oper");
@@ -79,7 +81,8 @@ namespace MES_Client
                 comboBoxOper.Items.Add(oper[i]);
             }
         }
-
+         * */
+        /*
         void bindCombo(string strPara, Combobox cbBox) 
         {
 
@@ -98,6 +101,7 @@ namespace MES_Client
                 cbBox.Items.Add(oper[i]);
             }
         }
+         * */
 
 
         void fillFlow()

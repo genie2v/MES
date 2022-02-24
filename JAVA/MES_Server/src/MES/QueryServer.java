@@ -71,14 +71,14 @@ public class QueryServer {
 					get_lotlist();
 				}
 
-
+/*
 				String strReadPara = bufferedReader.readLine();
 
 				//ex) action=get_combo;para1=oper;para2=flow;para3=prod
 				String[] strParaList = strReadPara.split(";");
-				String strAction = strParaList[0];
+				String strAction = strParaList[0]; // action=get_combo (?)
 				// 맨 앞 para 가 action
-				if (strAction.equals("get_oper")) {
+				if (strAction.equals("get_oper")) { //.contains (?)
 					select_oper();
 				} else if (strAction.equals("get_testSample")) {
 
@@ -88,8 +88,10 @@ public class QueryServer {
 
 					//ex) action=get_combo;para1=oper;para2=flow;para3=prod
 					for (int i = 1; i < strParaList.length; i++) {
-
+					
+						// String[] strParaValue = strParaList[i].split("=")
 						String strParaValue = strParaList[i].split("=");
+						// for(int j=0; j<strParaValue.length; j++)
 						if (strParaList[i].equal("para1")) {
 							strPara1 = strParaValue[1];
 						} else if (strParaList[i].equal("para2")) {
@@ -103,25 +105,7 @@ public class QueryServer {
 					// select_sample(strPara1, strPara2, strPara3);
 					// or select_sample(strParaList);
 				}
-
-
-				// 요청을 한 줄로 받아왔을시 split
-//				msg = bufferedReader.readLine();
-//				System.out.println(msg);
-//
-//				String[] splitMsg = msg.split(";");
-//				for (int i = 0; i < splitMsg.length; i++) {
-//					System.out.println(splitMsg[i]);
-//				}
-//				
-//				for (int i = 0; i < splitMsg.length; i++) {
-//					String[] temp = splitMsg[i].split("=");
-//					System.out.println(temp[0] + " " + temp[1]);
-//				}
-
-				// String[] split = splitMsg[1].split("=");
-				// for (int i = 0; i < split.length; i++)
-				// System.out.println(split[i]);
+*/
 
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -198,7 +182,7 @@ public class QueryServer {
 		String searchId = bufferedReader.readLine();
 		System.out.println(searchId);
 
-		String countQuery = "Select count(lot) from lot_his where lot='" + searchId + "'";
+		String countQuery = "select count(lot) from lot_his where lot='" + searchId + "'";
 		pstm = conn.prepareStatement(countQuery);
 		rs = pstm.executeQuery();
 		String count = "";
@@ -209,7 +193,7 @@ public class QueryServer {
 		bufferedWriter.flush();
 		System.out.println(count);
 
-		String searchHis = "Select lot,oper,flow,prod,prod_qty from lot_his where lot = '" + searchId + "'";
+		String searchHis = "select lot,oper,flow,prod,prod_qty from lot_his where lot = '" + searchId + "'";
 		pstm = conn.prepareStatement(searchHis);
 		rs = pstm.executeQuery();
 		String response;
@@ -229,10 +213,68 @@ public class QueryServer {
 	}
 
 	public static void get_qty() throws SQLException, IOException {
-		
+		//System.out.println("getQty");
+		String countQuery = "select count(distinct o.oper) from oper_inf o, lot_his l " + "where o.oper=l.oper";
+		pstm = conn.prepareStatement(countQuery);
+		rs = pstm.executeQuery();
+		String count = "";
+		while (rs.next())
+			count = rs.getString(1);
+		bufferedWriter.write(count);
+		bufferedWriter.newLine();
+		bufferedWriter.flush();
+		System.out.println(count);
+
+		String groupOper = "select o.oper, count(lot), sum(prod_qty) from oper_inf o, lot_his l "
+				+ "where o.oper = l.oper group by o.oper";
+		pstm = conn.prepareStatement(groupOper);
+		rs = pstm.executeQuery();
+		String response;
+		while (rs.next()) {
+			response = "";
+			response += rs.getString(1) + ",";
+			response += rs.getString(2) + ",";
+			response += rs.getString(3);
+
+			System.out.println(response);
+			bufferedWriter.write(response);
+			bufferedWriter.newLine();
+			bufferedWriter.flush();
+		}
 	}
 
 	public static void get_lotlist() throws IOException, SQLException {
-		
+		//System.out.println("getList");
+				String lotOper = bufferedReader.readLine();
+				System.out.println(lotOper);
+
+				String countQuery = "select count(lot) from lot_his where oper = '" + lotOper + "'";
+				pstm = conn.prepareStatement(countQuery);
+				rs = pstm.executeQuery();
+				String count = "";
+				while (rs.next())
+					count = rs.getString(1);
+				bufferedWriter.write(count);
+				bufferedWriter.newLine();
+				bufferedWriter.flush();
+				//System.out.println(count);
+
+				String getLotlist = "select lot,oper,flow,prod,prod_qty from lot_his where oper = '" + lotOper + "'";
+				pstm = conn.prepareStatement(getLotlist);
+				rs = pstm.executeQuery();
+				String response;
+				while (rs.next()) {
+					response = "";
+					response += rs.getString("lot") + ",";
+					response += rs.getString("oper") + ",";
+					response += rs.getString("flow") + ",";
+					response += rs.getString("prod") + ",";
+					response += rs.getString("prod_qty");
+					
+					System.out.println(response);
+					bufferedWriter.write(response);
+					bufferedWriter.newLine();
+					bufferedWriter.flush();
+				}
 	}
 }

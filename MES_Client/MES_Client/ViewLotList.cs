@@ -53,7 +53,22 @@ namespace MES_Client
 
         void getQty() 
         {
+            writer.WriteLine("get_qty");
+            writer.Flush();
+            //MessageBox.Show("JOIN");
 
+            String count = reader.ReadLine();
+            String receive = "";
+
+            for (int i = 0; i < Convert.ToInt16(count); i++)
+            {
+                receive = reader.ReadLine();
+                //MessageBox.Show(receive);
+                String[] qty = receive.Split(',');
+                //foreach (String s in qty) MessageBox.Show(s);
+                dataTable.Rows.Add(qty[0], qty[1], qty[2]);
+                dataGridView1.DataSource = dataTable;
+            }
         }
 
         private void dataGridView1_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
@@ -71,7 +86,23 @@ namespace MES_Client
 
         void fillLotlist() 
         {
+            String clickOper = this.dataGridView1.CurrentRow.Cells["Oper"].Value.ToString();
+            writer.WriteLine(clickOper);
+            writer.Flush();
 
+            String count = reader.ReadLine();
+            //MessageBox.Show(count);
+            String receive = "";
+
+            dataTable2.Rows.Clear();
+            dataGridView2.DataSource = dataTable;
+            for (int i = 0; i < Convert.ToInt16(count); i++)
+            {
+                receive = reader.ReadLine();
+                String[] lotlist = receive.Split(',');
+                dataTable2.Rows.Add(lotlist[0], lotlist[1], lotlist[2], lotlist[3], lotlist[4]);
+                dataGridView2.DataSource = dataTable2;
+            }
         }
     }
 }
