@@ -75,6 +75,9 @@ public class QueryServer {
 				String strReadPara = bufferedReader.readLine();
 
 				//ex) action=get_combo;para1=oper;para2=flow;para3=prod
+				// 이건 예시...
+				// action=get_oper;lot=lot1;flow=flow1 이런식으로 받은걸 가정한 코드
+				
 				String[] strParaList = strReadPara.split(";");
 				String strAction = strParaList[0]; // action=get_combo (?)
 				// 맨 앞 para 가 action
