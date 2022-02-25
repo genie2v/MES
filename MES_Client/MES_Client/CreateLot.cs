@@ -34,18 +34,17 @@ namespace MES_Client
             writer = new StreamWriter(ns);
             reader = new StreamReader(ns);
 
-            writer.WriteLine("get_combo");
+            //writer.WriteLine("get_combo");
+           // writer.Flush();
+
+            String request = "action=get_combo;para1=oper;para2=flow;para3=prod";
+            writer.WriteLine(request);
             writer.Flush();
-            
+
             fillOper();
             fillFlow();
             fillProd();
             
-            
-            //String request = "action=get_combo;para1=oper;para2=flow;para3=prod";
-            //writer.WriteLine(request);
-            //writer.Flush();          
-
             /*
             fillOperTest();
             //or
@@ -60,7 +59,11 @@ namespace MES_Client
             String receive = reader.ReadLine();
             //MessageBox.Show(receive);
             string[] oper = receive.Split(',');
-            foreach (string s in oper) comboBoxOper.Items.Add(s);
+            for (int i = 0; i < oper.Length; i++)
+            {
+                comboBoxOper.Items.Add(oper[i]);
+            }
+            //foreach (string s in oper) comboBoxOper.Items.Add(s);
         }
 
         /*
@@ -110,8 +113,11 @@ namespace MES_Client
             writer.Flush();
             String receive = reader.ReadLine();
             //MessageBox.Show(receive);
-            string[] oper = receive.Split(',');
-            foreach (string s in oper) comboBoxFlow.Items.Add(s);
+            string[] flow = receive.Split(',');
+            for (int i = 0; i < flow.Length; i++) {
+                comboBoxFlow.Items.Add(flow[i]);
+            }
+            //foreach (string s in oper) comboBoxFlow.Items.Add(s);
         }
 
         void fillProd()
@@ -120,8 +126,12 @@ namespace MES_Client
             writer.Flush();
             String receive = reader.ReadLine();
             //MessageBox.Show(receive);
-            string[] oper = receive.Split(',');
-            foreach (string s in oper) comboBoxProd.Items.Add(s);
+            string[] prod = receive.Split(',');
+            for (int i = 0; i < prod.Length; i++)
+            {
+                comboBoxProd.Items.Add(prod[i]);
+            }
+            //foreach (string s in oper) comboBoxProd.Items.Add(s);
         }
 
         private void textBoxLotId_KeyPress(object sender, KeyPressEventArgs e)
@@ -146,7 +156,7 @@ namespace MES_Client
             writer = new StreamWriter(ns);
             reader = new StreamReader(ns);
 
-            writer.WriteLine("create_lot");
+            writer.WriteLine("action=create_lot");
             writer.Flush();
 
             create_lot();
@@ -154,7 +164,7 @@ namespace MES_Client
 
         void create_lot()
         {
-            String id = textBoxLotId.Text.ToString();
+            String id = textBoxLotId.Text.ToString().ToUpper();
             String oper = comboBoxOper.Text.ToString();
             String flow = comboBoxFlow.Text.ToString();
             String prod = comboBoxProd.Text.ToString();

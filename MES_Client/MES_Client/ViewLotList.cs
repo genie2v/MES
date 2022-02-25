@@ -48,13 +48,15 @@ namespace MES_Client
             writer = new StreamWriter(ns);
             reader = new StreamReader(ns);
 
+            writer.WriteLine("action=get_qty");
+            writer.Flush();
             getQty();
         }
 
         void getQty() 
         {
-            writer.WriteLine("get_qty");
-            writer.Flush();
+            //writer.WriteLine("get_qty");
+            //writer.Flush();
             //MessageBox.Show("JOIN");
 
             String count = reader.ReadLine();
@@ -79,16 +81,18 @@ namespace MES_Client
             writer = new StreamWriter(ns);
             reader = new StreamReader(ns);
 
-            writer.WriteLine("get_lotlist");
+            String clickOper = this.dataGridView1.CurrentRow.Cells["Oper"].Value.ToString();
+            writer.WriteLine("action=get_lotlist;para1="+clickOper);
+            //writer.WriteLine("action=get_lotlist");
             writer.Flush();
             fillLotlist();
         }
 
         void fillLotlist() 
         {
-            String clickOper = this.dataGridView1.CurrentRow.Cells["Oper"].Value.ToString();
-            writer.WriteLine(clickOper);
-            writer.Flush();
+            //String clickOper = this.dataGridView1.CurrentRow.Cells["Oper"].Value.ToString();
+            //writer.WriteLine(clickOper);
+            //writer.Flush();
 
             String count = reader.ReadLine();
             //MessageBox.Show(count);

@@ -41,17 +41,20 @@ namespace MES_Client
             writer = new StreamWriter(ns);
             reader = new StreamReader(ns);
 
-            writer.WriteLine("get_his");
+            //writer.WriteLine("get_his");
+            //writer.Flush();
+            String lotId = textBoxSearch.Text.ToString().ToUpper();
+            writer.WriteLine("action=get_his;para1="+lotId);
             writer.Flush();
             getHis();
         }
 
         void getHis() 
         {
-            String lotId = textBoxSearch.Text.ToString();
+            //String lotId = textBoxSearch.Text.ToString();
 
-            writer.WriteLine(lotId);
-            writer.Flush();
+            //writer.WriteLine(lotId);
+            //writer.Flush();
             //MessageBox.Show(lotId);
             String count = reader.ReadLine();
             //MessageBox.Show(count);

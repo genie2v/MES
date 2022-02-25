@@ -27,8 +27,8 @@ public class QueryServer {
 
 	public static void main(String[] args) throws SQLException {
 		// TODO Auto-generated method stub
-		String msg = "";
-		String action = "";
+//		String msg = "";
+//		String action = "";
 
 		try {
 			serverSocket = new ServerSocket(8000);
@@ -50,62 +50,86 @@ public class QueryServer {
 				bufferedReader = new BufferedReader(inputStreamReader);
 				bufferedWriter = new BufferedWriter(outputStreamWriter);
 
-				action = bufferedReader.readLine();
-				if (action.equals("get_combo")) {
-					msg = bufferedReader.readLine();
-					if (msg.equals("oper"))
-						select_oper();
-					msg = bufferedReader.readLine();
-					if (msg.equals("flow"))
-						select_flow();
-					msg = bufferedReader.readLine();
-					if (msg.equals("prod"))
-						select_prod();
-				} else if (action.equals("create_lot")) {
-					create_lot();
-				} else if (action.equals("get_his")) {
-					get_his();
-				} else if (action.equals("get_qty")) {
-					get_qty();
-				} else if (action.equals("get_lotlist")) {
-					get_lotlist();
-				}
+				/*
+				 * 기존코드 action = bufferedReader.readLine(); if (action.equals("get_combo")) {
+				 * msg = bufferedReader.readLine(); if (msg.equals("oper")) select_oper(); msg =
+				 * bufferedReader.readLine(); if (msg.equals("flow")) select_flow(); msg =
+				 * bufferedReader.readLine(); if (msg.equals("prod")) select_prod(); } else if
+				 * (action.equals("create_lot")) { create_lot(); } else if
+				 * (action.equals("get_his")) { get_his(); } else if (action.equals("get_qty"))
+				 * { get_qty(); } else if (action.equals("get_lotlist")) { get_lotlist(); }
+				 */
 
-/*
 				String strReadPara = bufferedReader.readLine();
+				//System.out.println(strReadPara);
 
-				//ex) action=get_combo;para1=oper;para2=flow;para3=prod
+				// ex) action=get_combo;para1=oper;para2=flow;para3=prod
 				String[] strParaList = strReadPara.split(";");
 				String strAction = strParaList[0]; // action=get_combo (?)
 				// 맨 앞 para 가 action
-				if (strAction.equals("get_oper")) { //.contains (?)
-					select_oper();
-				} else if (strAction.equals("get_testSample")) {
-
+				if (strAction.contains("get_combo")) { // action=get_combo, equals보단 contains (?)
 					String strPara1 = "";
 					String strPara2 = "";
 					String strPara3 = "";
 
-					//ex) action=get_combo;para1=oper;para2=flow;para3=prod
+					// ex) action=get_combo;para1=oper;para2=flow;para3=prod
 					for (int i = 1; i < strParaList.length; i++) {
-					
+
 						// String[] strParaValue = strParaList[i].split("=")
-						String strParaValue = strParaList[i].split("=");
-						// for(int j=0; j<strParaValue.length; j++)
-						if (strParaList[i].equal("para1")) {
-							strPara1 = strParaValue[1];
-						} else if (strParaList[i].equal("para2")) {
-							strPara2 = strParaValue[1];
-						} else if (strParaList[i].equal("para3")) {
-							strPara3 = strParaValue[1];
+						String[] strParaValue = strParaList[i].split("="); // [0]para1,[1]oper
+						for (int j = 0; j < strParaValue.length; j++) {
+							if (strParaValue[j].equals("para1")) {
+								strPara1 = strParaValue[1];
+								break;
+							} else if (strParaValue[j].equals("para2")) {
+								strPara2 = strParaValue[1];
+								break;
+							} else if (strParaValue[j].equals("para3")) {
+								strPara3 = strParaValue[1];
+								break;
+							}
 						}
 					}
+					select_oper(strPara1);
+					select_flow(strPara2);
+					select_prod(strPara3);
 
 					// do something
 					// select_sample(strPara1, strPara2, strPara3);
 					// or select_sample(strParaList);
+				} else if (strAction.contains("create_lot")) {
+					String insertData = bufferedReader.readLine();
+					//System.out.println(insertData);
+					create_lot(insertData);
+				} else if (strAction.contains("get_his")) {
+					String strPara1 = "";
+					for (int i = 1; i < strParaList.length; i++) {
+						String[] strParaValue = strParaList[i].split("=");
+						for (int j = 0; j < strParaValue.length; j++) {
+							if (strParaValue[j].equals("para1")) {
+								strPara1 = strParaValue[1];
+								//System.out.println(strPara1);
+								break;
+							}
+						}
+					}
+					get_his(strPara1);
+				} else if (strAction.contains("get_qty")) {
+					get_qty();
+				} else if (strAction.contains("get_lotlist")) {
+					String strPara1 = "";
+					for (int i = 1; i < strParaList.length; i++) {
+						String[] strParaValue = strParaList[i].split("=");
+						for (int j = 0; j < strParaValue.length; j++) {
+							if (strParaValue[j].equals("para1")) {
+								strPara1 = strParaValue[1];
+								//System.out.println(strPara1);
+								break;
+							}
+						}
+					}
+					get_lotlist(strPara1);
 				}
-*/
 
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -114,7 +138,7 @@ public class QueryServer {
 
 	}
 
-	public static void select_oper() throws SQLException, IOException {
+	public static void select_oper(String oper) throws SQLException, IOException {
 		String selOper = "select oper from oper_inf";
 		pstm = conn.prepareStatement(selOper);
 		rs = pstm.executeQuery();
@@ -130,7 +154,7 @@ public class QueryServer {
 		bufferedWriter.flush();
 	}
 
-	public static void select_flow() throws SQLException, IOException {
+	public static void select_flow(String flow) throws SQLException, IOException {
 		String selFlow = "select flow from flow_inf";
 		pstm = conn.prepareStatement(selFlow);
 		rs = pstm.executeQuery();
@@ -146,7 +170,7 @@ public class QueryServer {
 		bufferedWriter.flush();
 	}
 
-	public static void select_prod() throws SQLException, IOException {
+	public static void select_prod(String prod) throws SQLException, IOException {
 		String selProd = "select prod from prod_inf";
 		pstm = conn.prepareStatement(selProd);
 		rs = pstm.executeQuery();
@@ -162,9 +186,9 @@ public class QueryServer {
 		bufferedWriter.flush();
 	}
 
-	public static void create_lot() throws IOException, SQLException {
-		String insertData = bufferedReader.readLine();
-		System.out.println(insertData);
+	public static void create_lot(String insertData) throws IOException, SQLException {
+		// String insertData = bufferedReader.readLine();
+		// System.out.println(insertData);
 
 		String insertLot = "insert into lot_inf (lot,oper,flow,prod,prod_qty) values (" + insertData + ")";
 		String insertHis = "insert into lot_his (lot,oper,flow,prod,prod_qty) values (" + insertData + ")";
@@ -178,9 +202,9 @@ public class QueryServer {
 		bufferedWriter.flush();
 	}
 
-	public static void get_his() throws IOException, SQLException {
-		String searchId = bufferedReader.readLine();
-		System.out.println(searchId);
+	public static void get_his(String searchId) throws IOException, SQLException {
+//		String searchId = bufferedReader.readLine();
+//		System.out.println(searchId);
 
 		String countQuery = "select count(lot) from lot_his where lot='" + searchId + "'";
 		pstm = conn.prepareStatement(countQuery);
@@ -213,7 +237,7 @@ public class QueryServer {
 	}
 
 	public static void get_qty() throws SQLException, IOException {
-		//System.out.println("getQty");
+		// System.out.println("getQty");
 		String countQuery = "select count(distinct o.oper) from oper_inf o, lot_his l " + "where o.oper=l.oper";
 		pstm = conn.prepareStatement(countQuery);
 		rs = pstm.executeQuery();
@@ -243,38 +267,38 @@ public class QueryServer {
 		}
 	}
 
-	public static void get_lotlist() throws IOException, SQLException {
-		//System.out.println("getList");
-				String lotOper = bufferedReader.readLine();
-				System.out.println(lotOper);
+	public static void get_lotlist(String lotOper) throws IOException, SQLException {
+		// System.out.println("getList");
+		// String lotOper = bufferedReader.readLine();
+		// System.out.println(lotOper);
 
-				String countQuery = "select count(lot) from lot_his where oper = '" + lotOper + "'";
-				pstm = conn.prepareStatement(countQuery);
-				rs = pstm.executeQuery();
-				String count = "";
-				while (rs.next())
-					count = rs.getString(1);
-				bufferedWriter.write(count);
-				bufferedWriter.newLine();
-				bufferedWriter.flush();
-				//System.out.println(count);
+		String countQuery = "select count(lot) from lot_his where oper = '" + lotOper + "'";
+		pstm = conn.prepareStatement(countQuery);
+		rs = pstm.executeQuery();
+		String count = "";
+		while (rs.next())
+			count = rs.getString(1);
+		bufferedWriter.write(count);
+		bufferedWriter.newLine();
+		bufferedWriter.flush();
+		// System.out.println(count);
 
-				String getLotlist = "select lot,oper,flow,prod,prod_qty from lot_his where oper = '" + lotOper + "'";
-				pstm = conn.prepareStatement(getLotlist);
-				rs = pstm.executeQuery();
-				String response;
-				while (rs.next()) {
-					response = "";
-					response += rs.getString("lot") + ",";
-					response += rs.getString("oper") + ",";
-					response += rs.getString("flow") + ",";
-					response += rs.getString("prod") + ",";
-					response += rs.getString("prod_qty");
-					
-					System.out.println(response);
-					bufferedWriter.write(response);
-					bufferedWriter.newLine();
-					bufferedWriter.flush();
-				}
+		String getLotlist = "select lot,oper,flow,prod,prod_qty from lot_his where oper = '" + lotOper + "'";
+		pstm = conn.prepareStatement(getLotlist);
+		rs = pstm.executeQuery();
+		String response;
+		while (rs.next()) {
+			response = "";
+			response += rs.getString("lot") + ",";
+			response += rs.getString("oper") + ",";
+			response += rs.getString("flow") + ",";
+			response += rs.getString("prod") + ",";
+			response += rs.getString("prod_qty");
+
+			System.out.println(response);
+			bufferedWriter.write(response);
+			bufferedWriter.newLine();
+			bufferedWriter.flush();
+		}
 	}
 }
