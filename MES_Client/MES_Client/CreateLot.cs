@@ -20,42 +20,58 @@ namespace MES_Client
         StreamWriter writer = null;
         StreamReader reader = null;
 
+
         public CreateLot()
         {
             InitializeComponent();
             this.ActiveControl = textBoxLotId;
-        }
-        
-        private void CreateLot_Load(object sender, EventArgs e)
-        {
+
             client = new TcpClient("localhost", 8000);
             //if (client.Connected) MessageBox.Show("Server Connected.");
             ns = client.GetStream();
             writer = new StreamWriter(ns);
             reader = new StreamReader(ns);
+        }
+        
+        private void CreateLot_Load(object sender, EventArgs e)
+        {
+            //client = new TcpClient("localhost", 8000);
+            ////if (client.Connected) MessageBox.Show("Server Connected.");
+            //ns = client.GetStream();
+            //writer = new StreamWriter(ns);
+            //reader = new StreamReader(ns);
 
             //writer.WriteLine("get_combo");
-           // writer.Flush();
+            //writer.Flush();
 
-            String request = "action=get_combo;para1=oper;para2=flow;para3=prod";
+            String request = "action=get_oper";
             writer.WriteLine(request);
             writer.Flush();
-
             fillOper();
+
+            request = "action=get_flow";
+            writer.WriteLine(request);
+            writer.Flush();
             fillFlow();
+
+            request = "action=get_prod";
+            writer.WriteLine(request);
+            writer.Flush();
             fillProd();
             
-            /*
-            fillOperTest();
+            //fillOperTest();
             //or
-            bindCombo("action=get_oper", comboBoxOper);
-            */
+            //bindCombo("action=get_oper", comboBoxOper);
+            //bindCombo("action=get_flow", comboBoxFlow);
+            //bindCombo("action=get_prod", comboBoxProd);
+            
         }
 
+        
         void fillOper() 
         {
-            writer.WriteLine("oper");
-            writer.Flush();
+            //writer.WriteLine("oper");
+            //writer.Flush();
             String receive = reader.ReadLine();
             //MessageBox.Show(receive);
             string[] oper = receive.Split(',');
@@ -65,6 +81,7 @@ namespace MES_Client
             }
             //foreach (string s in oper) comboBoxOper.Items.Add(s);
         }
+       
 
         /*
         void fillOperTest() 
@@ -86,31 +103,32 @@ namespace MES_Client
         }
          * */
         /*
-        void bindCombo(string strPara, Combobox cbBox) 
+        void bindCombo(string strPara, ComboBox cbBox) 
         {
 
             writer.WriteLine(strPara);
+            writer.Flush();
 
             // 나중에 서버로 보낼 데이터가 필요하다면 예시
             // writer.WriteLine("action=get_oper;lot=lot1;flow=flow1");
-            writer.Flush();
+
             String receive = reader.ReadLine();
             //MessageBox.Show(receive);
-            string[] oper = receive.Split(',');
+            string[] receives = receive.Split(',');
 
             // 코드는 풀어서 표현한다
-            for (int i = 0; i < oper.length; i++)
+            for (int i = 0; i < receives.Length; i++)
             {
-                cbBox.Items.Add(oper[i]);
+                cbBox.Items.Add(receives[i]);
             }
         }
-         * */
+        */ 
 
-
+        
         void fillFlow()
         {
-            writer.WriteLine("flow");
-            writer.Flush();
+           // writer.WriteLine("flow");
+           // writer.Flush();
             String receive = reader.ReadLine();
             //MessageBox.Show(receive);
             string[] flow = receive.Split(',');
@@ -120,10 +138,11 @@ namespace MES_Client
             //foreach (string s in oper) comboBoxFlow.Items.Add(s);
         }
 
+
         void fillProd()
         {
-            writer.WriteLine("prod");
-            writer.Flush();
+            //writer.WriteLine("prod");
+            //writer.Flush();
             String receive = reader.ReadLine();
             //MessageBox.Show(receive);
             string[] prod = receive.Split(',');
@@ -133,6 +152,7 @@ namespace MES_Client
             }
             //foreach (string s in oper) comboBoxProd.Items.Add(s);
         }
+        
 
         private void textBoxLotId_KeyPress(object sender, KeyPressEventArgs e)
         {
@@ -150,12 +170,6 @@ namespace MES_Client
 
         private void btnCreate_Click(object sender, EventArgs e)
         {
-            client = new TcpClient("localhost", 8000);
-            //if (client.Connected) MessageBox.Show("Server Connected.");
-            ns = client.GetStream();
-            writer = new StreamWriter(ns);
-            reader = new StreamReader(ns);
-
             writer.WriteLine("action=create_lot");
             writer.Flush();
 
