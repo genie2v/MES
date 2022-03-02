@@ -20,7 +20,8 @@ namespace MES_Client
         StreamWriter writer = null;
         StreamReader reader = null;
 
-
+        TcpClient tcWip = null;
+        TcpClient tcQuery = null;
         public CreateLot()
         {
             InitializeComponent();
@@ -33,6 +34,19 @@ namespace MES_Client
             //reader = new StreamReader(ns);
 
             
+        }
+
+
+
+        public CreateLot(TcpClient wip, TcpClient query)
+        {
+            // 이미 connection 맺은 소켓 연결을 가지고 사용
+            
+            InitializeComponent();
+            this.ActiveControl = textBoxLotId;
+
+            tcWip = wip;
+            tcQuery = query;
         }
         
         private void CreateLot_Load(object sender, EventArgs e)

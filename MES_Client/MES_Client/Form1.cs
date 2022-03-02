@@ -15,12 +15,17 @@ namespace MES_Client
         public Form1()
         {
             InitializeComponent();
+
         }
 
         private void btnCreateLot_Click(object sender, EventArgs e)
         {
             CreateLot createLot = new CreateLot();
             createLot.ShowDialog();
+
+            // 전역변수로 wip query socket 연결 후 생성자로 팝업창 open
+            // CreateLot createLot = new CreateLot(tcWip, tcQuery);
+            // createLot.ShowDialog();
         }
 
         private void btnViewLotList_Click(object sender, EventArgs e)
