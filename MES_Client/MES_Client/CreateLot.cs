@@ -46,7 +46,7 @@ namespace MES_Client
             //writer.WriteLine("get_combo");
             //writer.Flush();
 
-            
+            /*
             String request = "action=get_combo;para1=oper;para2=flow;para3=prod";
             writer.WriteLine(request);
             writer.Flush();
@@ -54,9 +54,9 @@ namespace MES_Client
             fillOper();
             fillFlow();
             fillProd();
+             * */
              
             
-            /*
             String request = "action=get_oper";
             writer.WriteLine(request);
             writer.Flush();
@@ -71,7 +71,6 @@ namespace MES_Client
             writer.WriteLine(request);
             writer.Flush();
             fillProd();
-             * */
             
 
             //fillOperTest();
@@ -184,11 +183,11 @@ namespace MES_Client
 
         private void btnCreate_Click(object sender, EventArgs e)
         {
-            client = new TcpClient("localhost", 8000);
+            //client = new TcpClient("localhost", 8000);
             //if (client.Connected) MessageBox.Show("Server Connected.");
-            ns = client.GetStream();
-            writer = new StreamWriter(ns);
-            reader = new StreamReader(ns);
+            //ns = client.GetStream();
+            //writer = new StreamWriter(ns);
+            //reader = new StreamReader(ns);
 
             writer.WriteLine("action=create_lot");
             writer.Flush();

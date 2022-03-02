@@ -58,7 +58,7 @@ public class QueryServer {
 				 * { get_qty(); } else if (action.equals("get_lotlist")) { get_lotlist(); }
 				 */
 
-				//while (true) {
+				while (true) {
 					// 창 바꿀때마다 client > server 가 안됨
 					String strReadPara = bufferedReader.readLine();
 					System.out.println(strReadPara);
@@ -162,7 +162,7 @@ public class QueryServer {
 						}
 						get_lotlist(strPara1);
 					}
-				//}
+				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

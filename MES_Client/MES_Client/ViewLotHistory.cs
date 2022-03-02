@@ -33,13 +33,22 @@ namespace MES_Client
             dataGridView1.DataSource = dataTable;
         }
 
-        private void buttonSearch_Click(object sender, EventArgs e)
+        private void ViewLotHistory_Load(object sender, EventArgs e)
         {
             client = new TcpClient("localhost", 8000);
             //if (client.Connected) MessageBox.Show("Server Connected.");
             ns = client.GetStream();
             writer = new StreamWriter(ns);
             reader = new StreamReader(ns);
+        }
+
+        private void buttonSearch_Click(object sender, EventArgs e)
+        {
+            //client = new TcpClient("localhost", 8000);
+            //if (client.Connected) MessageBox.Show("Server Connected.");
+            //ns = client.GetStream();
+            //writer = new StreamWriter(ns);
+            //reader = new StreamReader(ns);
 
             String lotId = textBoxSearch.Text.ToString().ToUpper();
             writer.WriteLine("action=get_his;para1="+lotId);

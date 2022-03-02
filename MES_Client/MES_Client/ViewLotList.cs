@@ -74,11 +74,11 @@ namespace MES_Client
 
         private void dataGridView1_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
-            client = new TcpClient("localhost", 8000);
+            //client = new TcpClient("localhost", 8000);
             //if (client.Connected) MessageBox.Show("Server Connected.");
-            ns = client.GetStream();
-            writer = new StreamWriter(ns);
-            reader = new StreamReader(ns);
+           // ns = client.GetStream();
+            //writer = new StreamWriter(ns);
+            //reader = new StreamReader(ns);
 
             String clickOper = this.dataGridView1.CurrentRow.Cells["Oper"].Value.ToString();
             writer.WriteLine("action=get_lotlist;para1="+clickOper);
