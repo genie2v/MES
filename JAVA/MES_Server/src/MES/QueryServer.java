@@ -27,17 +27,15 @@ public class QueryServer {
 
 	public static void main(String[] args) throws SQLException {
 		// TODO Auto-generated method stub
-//		String msg = "";
-//		String action = "";
-
-		try {
-			serverSocket = new ServerSocket(8000);
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
 
 		while (true) {
+			try {
+				serverSocket = new ServerSocket(8000);
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+
 			try {
 				socket = serverSocket.accept();
 				System.out.println("Client Connected");
@@ -60,9 +58,10 @@ public class QueryServer {
 				 * { get_qty(); } else if (action.equals("get_lotlist")) { get_lotlist(); }
 				 */
 
-				while (true) {				
+				//while (true) {
+					// 창 바꿀때마다 client > server 가 안됨
 					String strReadPara = bufferedReader.readLine();
-					// System.out.println(strReadPara);
+					System.out.println(strReadPara);
 
 					// ex) action=get_combo;para1=oper;para2=flow;para3=prod
 					// 이건 예시...
@@ -92,45 +91,47 @@ public class QueryServer {
 					// 로 돌아가야 합니다
 					// 그래야 공용으로 사용할 함수를 만들었을 때 재사용할 수 있게 됩니다
 
-					if (strAction.contains("get_oper")) {
-//						String strPara1 = "";
-//						String strPara2 = "";
-//						String strPara3 = "";
-						select_oper("oper");
+					if (strAction.contains("get_combo")) {
+						String strPara1 = "";
+						String strPara2 = "";
+						String strPara3 = "";
 
 						// ex) action=get_combo;para1=oper;para2=flow;para3=prod
-//					for (int i = 1; i < strParaList.length; i++) {
-//
-//						// String[] strParaValue = strParaList[i].split("=")
-//						String[] strParaValue = strParaList[i].split("="); // [0]para1,[1]oper
-//						for (int j = 0; j < strParaValue.length; j++) {
-//							if (strParaValue[j].equals("para1")) {
-//								strPara1 = strParaValue[1];
-//								break;
-//							} else if (strParaValue[j].equals("para2")) {
-//								strPara2 = strParaValue[1];
-//								break;
-//							} else if (strParaValue[j].equals("para3")) {
-//								strPara3 = strParaValue[1];
-//								break;
-//							}
-//						}
-//					}
-//					select_oper(strPara1);
-//					select_flow(strPara2);
-//					select_prod(strPara3);
+						for (int i = 1; i < strParaList.length; i++) {
+
+							// String[] strParaValue = strParaList[i].split("=")
+							String[] strParaValue = strParaList[i].split("="); // [0]para1,[1]oper
+							for (int j = 0; j < strParaValue.length; j++) {
+								if (strParaValue[j].equals("para1")) {
+									strPara1 = strParaValue[1];
+									break;
+								} else if (strParaValue[j].equals("para2")) {
+									strPara2 = strParaValue[1];
+									break;
+								} else if (strParaValue[j].equals("para3")) {
+									strPara3 = strParaValue[1];
+									break;
+								}
+							}
+						}
+						select_oper(strPara1);
+						select_flow(strPara2);
+						select_prod(strPara3);
 
 						// do something
 						// select_sample(strPara1, strPara2, strPara3);
 						// or select_sample(strParaList);
+					} else if (strAction.contains("get_oper")) {
+						select_oper("oper");
 					} else if (strAction.contains("get_flow")) {
 						select_flow("flow");
 					} else if (strAction.contains("get_prod")) {
 						select_prod("prod");
 					} else if (strAction.contains("create_lot")) {
+						String lotId = bufferedReader.readLine();
 						String insertData = bufferedReader.readLine();
-						System.out.println(insertData);
-						create_lot(insertData);
+						System.out.println(lotId + insertData);
+						create_lot(lotId, insertData);
 					} else if (strAction.contains("get_his")) {
 						String strPara1 = "";
 						for (int i = 1; i < strParaList.length; i++) {
@@ -145,6 +146,7 @@ public class QueryServer {
 						}
 						get_his(strPara1);
 					} else if (strAction.contains("get_qty")) {
+						//System.out.println("get_qty");
 						get_qty();
 					} else if (strAction.contains("get_lotlist")) {
 						String strPara1 = "";
@@ -160,7 +162,7 @@ public class QueryServer {
 						}
 						get_lotlist(strPara1);
 					}
-				}
+				//}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -216,9 +218,9 @@ public class QueryServer {
 		bufferedWriter.flush();
 	}
 
-	public static void create_lot(String insertData) throws IOException, SQLException {
+	public static void create_lot(String lotId, String insertData) throws IOException, SQLException {
 		// String insertData = bufferedReader.readLine();
-		// System.out.println(insertData);
+		System.out.println(insertData);
 
 		// check
 		// 데이터 등록 시 mes_db 엑셀에 표시된 것 처럼 컬럼을 모두 채우기 바랍니다
@@ -232,22 +234,31 @@ public class QueryServer {
 		// 예시)
 		// "return=0;para1=para1;para2=para2" -> 정상 처리된 경우 return=0
 		// "return=Error-01" -> 오류가 발생한 경우 에러코드를 지정하여 클라이언트에서 해당 코드를 확인 후 오류 메시지 표시
-		
-		// client > server; insertData 보내는 방법 변경 필요 
-		//String checkPk = "select lot from lot_inf where lot='";
-	
-		String insertLot = "insert into lot_inf (fac,lot,oper,flow,prod,prod_qty,last_timekey,crt_tm,crt_user,chg_tm,chg_user) values"
-			    + "('PKG'," + insertData + ",rpad(to_char(sysdate,'yyyymmddhh24mi'),20,'0'),sysdate,'USER1',sysdate,'USER1')";
-		String insertHis = "insert into lot_his (fac,lot,oper,flow,prod,prod_qty,timekey,crt_tm,crt_user,chg_tm,chg_user) values"
-			    + "('PKG'," + insertData + ",rpad(to_char(sysdate,'yyyymmddhh24mi'),20,'0'),sysdate,'USER1',sysdate,'USER1')";
-		pstm = conn.prepareStatement(insertLot);
-		pstm.execute();
-		pstm = conn.prepareStatement(insertHis);
-		pstm.execute();
-		System.out.println("Success Create");
-		bufferedWriter.write("LOT생성");
-		bufferedWriter.newLine();
-		bufferedWriter.flush();
+
+		// client > server; insertData 보내는 방법 변경 필요
+		String checkPk = "select lot from lot_inf where lot='" + lotId + "'";
+		pstm = conn.prepareStatement(checkPk);
+		rs = pstm.executeQuery();
+		if (rs.next()) {
+			bufferedWriter.write("이미 있는 LOT");
+			bufferedWriter.newLine();
+			bufferedWriter.flush();
+		} else {
+			String insertLot = "insert into lot_inf (fac,lot,oper,flow,prod,prod_qty,last_timekey,crt_tm,crt_user,chg_tm,chg_user) values"
+					+ "('PKG'," + insertData
+					+ ",rpad(to_char(sysdate,'yyyymmddhh24mi'),20,'0'),sysdate,'USER1',sysdate,'USER1')";
+			String insertHis = "insert into lot_his (fac,lot,oper,flow,prod,prod_qty,timekey,crt_tm,crt_user,chg_tm,chg_user) values"
+					+ "('PKG'," + insertData
+					+ ",rpad(to_char(sysdate,'yyyymmddhh24mi'),20,'0'),sysdate,'USER1',sysdate,'USER1')";
+			pstm = conn.prepareStatement(insertLot);
+			pstm.execute();
+			pstm = conn.prepareStatement(insertHis);
+			pstm.execute();
+			System.out.println("Success Create");
+			bufferedWriter.write("LOT생성");
+			bufferedWriter.newLine();
+			bufferedWriter.flush();
+		}
 	}
 
 	public static void get_his(String searchId) throws IOException, SQLException {

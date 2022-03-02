@@ -41,8 +41,6 @@ namespace MES_Client
             writer = new StreamWriter(ns);
             reader = new StreamReader(ns);
 
-            //writer.WriteLine("get_his");
-            //writer.Flush();
             String lotId = textBoxSearch.Text.ToString().ToUpper();
             writer.WriteLine("action=get_his;para1="+lotId);
             writer.Flush();
