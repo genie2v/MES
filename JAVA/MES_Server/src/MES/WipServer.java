@@ -66,6 +66,9 @@ public class WipServer {
 
 	public static void create_lot(String lotId, String insertData) throws SQLException, IOException {
 		// TODO Auto-generated method stub
+
+		check
+		// DAO DTO 패턴으로 바뀌어야할 부분
 		String checkPK = "select lot from lot_inf where lot = '" + lotId + "'";
 		pstm = conn.prepareStatement(checkPK);
 		rs = pstm.executeQuery();

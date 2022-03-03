@@ -76,9 +76,9 @@ namespace MES_Client
             queryWriter.Flush();
             fillProd();
             
-
-            //fillOperTest();
-            //or
+            check
+            // 위처럼 동일한 코드가 반복되는 경우
+            // 이 주석처럼 재사용 코드로 간결하게 표현할 수 있다
             //bindCombo("action=get_oper", comboBoxOper);
             //bindCombo("action=get_flow", comboBoxFlow);
             //bindCombo("action=get_prod", comboBoxProd);
@@ -95,26 +95,6 @@ namespace MES_Client
             }
         }
        
-
-        /*
-        void fillOperTest() 
-        {
-            writer.WriteLine("action=get_oper");
-
-            // 나중에 서버로 보낼 데이터가 필요하다면 예시
-            // writer.WriteLine("action=get_oper;lot=lot1;flow=flow1");
-            writer.Flush();
-            String receive = reader.ReadLine();
-            //MessageBox.Show(receive);
-            string[] oper = receive.Split(',');
-
-            // 코드는 풀어서 표현한다
-            for (int i = 0; i < oper.length; i++)
-            {
-                comboBoxOper.Items.Add(oper[i]);
-            }
-        }
-         * */
         /*
         void bindCombo(string strPara, ComboBox cbBox) 
         {
@@ -187,6 +167,12 @@ namespace MES_Client
             String flow = comboBoxFlow.Text.ToString();
             String prod = comboBoxProd.Text.ToString();
             String prod_qty = textBoxProdQty.Text.ToString();
+
+
+            check
+            // DAO DTO 를 적용하면 바뀌어야할 부분
+            // name=value 형식으로 넘기도록 해야 한다
+            // ex) LOT_ID=LOT00001;OPER=1000;FLOW=FLOW-0001;PROD=PROD-XXXX-0001;PROD_QTY=1234
 
             String insertData = "'" + id + "','" + oper + "','" + flow + "','" + prod + "','" + prod_qty + "'";
 
