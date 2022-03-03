@@ -14,13 +14,24 @@ namespace MES_Client
 {
     public partial class ViewLotHistory : Form
     {
-        TcpClient client = null;
-        NetworkStream ns = null;
-        StreamWriter writer = null;
-        StreamReader reader = null;
         DataTable dataTable = new DataTable();
 
+        TcpClient tcWip = null;
+        NetworkStream wipNs = null;
+        StreamWriter wipWriter = null;
+        StreamReader wipReader = null;
+
+        TcpClient tcQuery = null;
+        NetworkStream queryNs = null;
+        StreamWriter queryWriter = null;
+        StreamReader queryReader = null;
+
         public ViewLotHistory()
+        {
+            InitializeComponent();
+        }
+
+        public ViewLotHistory(TcpClient wip, TcpClient query)
         {
             InitializeComponent();
 
@@ -31,49 +42,39 @@ namespace MES_Client
             dataTable.Columns.Add("Prod Qty", typeof(String));
 
             dataGridView1.DataSource = dataTable;
-        }
 
-        private void ViewLotHistory_Load(object sender, EventArgs e)
-        {
-            client = new TcpClient("localhost", 8000);
-            //if (client.Connected) MessageBox.Show("Server Connected.");
-            ns = client.GetStream();
-            writer = new StreamWriter(ns);
-            reader = new StreamReader(ns);
+            tcQuery = query;
+            tcWip = wip;
+
+            wipNs = tcWip.GetStream();
+            wipWriter = new StreamWriter(wipNs);
+            wipReader = new StreamReader(wipNs);
+
+            queryNs = tcQuery.GetStream();
+            queryWriter = new StreamWriter(queryNs);
+            queryReader = new StreamReader(queryNs);
         }
 
         private void buttonSearch_Click(object sender, EventArgs e)
         {
-            //client = new TcpClient("localhost", 8000);
-            //if (client.Connected) MessageBox.Show("Server Connected.");
-            //ns = client.GetStream();
-            //writer = new StreamWriter(ns);
-            //reader = new StreamReader(ns);
-
             String lotId = textBoxSearch.Text.ToString().ToUpper();
-            writer.WriteLine("action=get_his;para1="+lotId);
-            writer.Flush();
+            queryWriter.WriteLine("action=get_his;para1=" + lotId);
+            queryWriter.Flush();
             getHis();
         }
 
         void getHis() 
         {
-            //String lotId = textBoxSearch.Text.ToString();
-
-            //writer.WriteLine(lotId);
-            //writer.Flush();
-            //MessageBox.Show(lotId);
-            String count = reader.ReadLine();
+            String count = queryReader.ReadLine();
             //MessageBox.Show(count);
-            String receive = "";
+            //String receive = "";
             dataTable.Rows.Clear();
             dataGridView1.DataSource = dataTable;
             for(int i =0; i<Convert.ToInt16(count);i++)
             {
-                receive = reader.ReadLine();
+                String receive = queryReader.ReadLine();
                 //MessageBox.Show(receive);
                 String[] his = receive.Split(',');
-                //foreach (String s in his) MessageBox.Show(s);
                 dataTable.Rows.Add(his[0], his[1], his[2], his[3], his[4]);
                 dataGridView1.DataSource = dataTable;
             }

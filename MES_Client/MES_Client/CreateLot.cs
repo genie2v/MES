@@ -15,51 +15,41 @@ namespace MES_Client
 {
     public partial class CreateLot : Form
     {
-        TcpClient client = null;
-        NetworkStream ns = null; 
-        StreamWriter writer = null;
-        StreamReader reader = null;
-
         TcpClient tcWip = null;
+        NetworkStream wipNs = null;
+        StreamWriter wipWriter = null;
+        StreamReader wipReader = null;
+
         TcpClient tcQuery = null;
+        NetworkStream queryNs = null;
+        StreamWriter queryWriter = null;
+        StreamReader queryReader = null;
+
         public CreateLot()
         {
             InitializeComponent();
-            this.ActiveControl = textBoxLotId;
-
-            //client = new TcpClient("localhost", 8000);
-            //if (client.Connected) MessageBox.Show("Server Connected.");
-            //ns = client.GetStream();
-            //writer = new StreamWriter(ns);
-            //reader = new StreamReader(ns);
-
-            
         }
-
-
 
         public CreateLot(TcpClient wip, TcpClient query)
         {
             // 이미 connection 맺은 소켓 연결을 가지고 사용
-            
             InitializeComponent();
             this.ActiveControl = textBoxLotId;
 
             tcWip = wip;
             tcQuery = query;
+
+            wipNs = tcWip.GetStream();
+            wipWriter = new StreamWriter(wipNs);
+            wipReader = new StreamReader(wipNs);
+
+            queryNs = tcQuery.GetStream();
+            queryWriter = new StreamWriter(queryNs);
+            queryReader = new StreamReader(queryNs);
         }
         
         private void CreateLot_Load(object sender, EventArgs e)
         {
-            client = new TcpClient("localhost", 8000);
-            //if (client.Connected) MessageBox.Show("Server Connected.");
-            ns = client.GetStream();
-            writer = new StreamWriter(ns);
-            reader = new StreamReader(ns);
-
-            //writer.WriteLine("get_combo");
-            //writer.Flush();
-
             /*
             String request = "action=get_combo;para1=oper;para2=flow;para3=prod";
             writer.WriteLine(request);
@@ -72,18 +62,18 @@ namespace MES_Client
              
             
             String request = "action=get_oper";
-            writer.WriteLine(request);
-            writer.Flush();
+            queryWriter.WriteLine(request);
+            queryWriter.Flush();
             fillOper();
 
             request = "action=get_flow";
-            writer.WriteLine(request);
-            writer.Flush();
+            queryWriter.WriteLine(request);
+            queryWriter.Flush();
             fillFlow();
 
             request = "action=get_prod";
-            writer.WriteLine(request);
-            writer.Flush();
+            queryWriter.WriteLine(request);
+            queryWriter.Flush();
             fillProd();
             
 
@@ -92,15 +82,11 @@ namespace MES_Client
             //bindCombo("action=get_oper", comboBoxOper);
             //bindCombo("action=get_flow", comboBoxFlow);
             //bindCombo("action=get_prod", comboBoxProd);
-            
         }
-
         
         void fillOper() 
         {
-            //writer.WriteLine("oper");
-            //writer.Flush();
-            String receive = reader.ReadLine();
+            String receive = queryReader.ReadLine();
             //MessageBox.Show(receive);
             string[] oper = receive.Split(',');
             for (int i = 0; i < oper.Length; i++)
@@ -150,36 +136,27 @@ namespace MES_Client
             }
         }
         */ 
-
         
         void fillFlow()
         {
-           // writer.WriteLine("flow");
-           // writer.Flush();
-            String receive = reader.ReadLine();
+            String receive = queryReader.ReadLine();
             //MessageBox.Show(receive);
             string[] flow = receive.Split(',');
             for (int i = 0; i < flow.Length; i++) {
                 comboBoxFlow.Items.Add(flow[i]);
             }
-            //foreach (string s in oper) comboBoxFlow.Items.Add(s);
         }
-
 
         void fillProd()
         {
-            //writer.WriteLine("prod");
-            //writer.Flush();
-            String receive = reader.ReadLine();
+            String receive = queryReader.ReadLine();
             //MessageBox.Show(receive);
             string[] prod = receive.Split(',');
             for (int i = 0; i < prod.Length; i++)
             {
                 comboBoxProd.Items.Add(prod[i]);
             }
-            //foreach (string s in oper) comboBoxProd.Items.Add(s);
         }
-        
 
         private void textBoxLotId_KeyPress(object sender, KeyPressEventArgs e)
         {
@@ -197,14 +174,8 @@ namespace MES_Client
 
         private void btnCreate_Click(object sender, EventArgs e)
         {
-            //client = new TcpClient("localhost", 8000);
-            //if (client.Connected) MessageBox.Show("Server Connected.");
-            //ns = client.GetStream();
-            //writer = new StreamWriter(ns);
-            //reader = new StreamReader(ns);
-
-            writer.WriteLine("action=create_lot");
-            writer.Flush();
+            wipWriter.WriteLine("action=create_lot");
+            wipWriter.Flush();
 
             create_lot();
         }
@@ -219,12 +190,12 @@ namespace MES_Client
 
             String insertData = "'" + id + "','" + oper + "','" + flow + "','" + prod + "','" + prod_qty + "'";
 
-            writer.WriteLine(id);
-            writer.Flush();
-            writer.WriteLine(insertData);
-            writer.Flush();
+            wipWriter.WriteLine(id);
+            wipWriter.Flush();
+            wipWriter.WriteLine(insertData);
+            wipWriter.Flush();
             //MessageBox.Show(insertData);
-            String receive = reader.ReadLine();
+            String receive = wipReader.ReadLine();
             MessageBox.Show(receive);
         }
     }
