@@ -12,6 +12,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import DB.DBConnection;
+
 public class QueryServer {
 	public static Connection conn = null;
 	public static PreparedStatement pstm = null;
@@ -129,7 +131,7 @@ public class QueryServer {
 						for (int i = 1; i < strParaList.length; i++) {
 							String[] strParaValue = strParaList[i].split("=");
 							for (int j = 0; j < strParaValue.length; j++) {
-								if (strParaValue[j].equals("para1")) {
+								if (strParaValue[j].equals("lot_id")) {
 									strPara1 = strParaValue[1];
 									// System.out.println(strPara1);
 									break;
@@ -145,7 +147,7 @@ public class QueryServer {
 						for (int i = 1; i < strParaList.length; i++) {
 							String[] strParaValue = strParaList[i].split("=");
 							for (int j = 0; j < strParaValue.length; j++) {
-								if (strParaValue[j].equals("para1")) {
+								if (strParaValue[j].equals("oper")) {
 									strPara1 = strParaValue[1];
 									// System.out.println(strPara1);
 									break;

@@ -57,11 +57,11 @@ namespace MES_Client
 
         private void buttonSearch_Click(object sender, EventArgs e)
         {
-            check
+            //check
             // para1 은 예시로 든 것, LOT_ID 같은 명시된 이름으로 넘겨야 헷갈리지 않는다
             // queryWriter.WriteLine("action=get_his;LOT_ID=" + lotId);
             String lotId = textBoxSearch.Text.ToString().ToUpper();
-            queryWriter.WriteLine("action=get_his;para1=" + lotId);
+            queryWriter.WriteLine("action=get_his;lot_id=" + lotId);
             queryWriter.Flush();
             getHis();
         }

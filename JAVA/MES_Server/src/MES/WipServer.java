@@ -2,23 +2,24 @@ package MES;
 
 import java.io.*;
 import java.net.*;
-import java.sql.*;
+//import java.sql.*;
 
 public class WipServer {
-	public static Connection conn = null;
-	public static PreparedStatement pstm = null;
-	public static ResultSet rs = null;
+	//public static Connection conn = null;
+	//public static PreparedStatement pstm = null;
+	//public static ResultSet rs = null;
 
-	public static ServerSocket serverSocket = null;
-	public static Socket socket = null;
+	private static ServerSocket serverSocket = null;
+	private static Socket socket = null;
 	public static InputStreamReader inputStreamReader = null;
-	public static OutputStreamWriter outputStreamWriter = null;
-	public static BufferedWriter bufferedWriter = null;
-	public static BufferedReader bufferedReader = null;
+	private static OutputStreamWriter outputStreamWriter = null;
+	private static BufferedWriter bufferedWriter = null;
+	private static BufferedReader bufferedReader = null;
 
 	// create, update, delete...
-	public static void main(String[] args) throws SQLException {
+	public static void main(String[] args) {
 		// TODO Auto-generated method stub
+		LotInfProcess process = new LotInfProcess();
 
 		while (true) {
 			try {
@@ -33,7 +34,7 @@ public class WipServer {
 				System.out.println("Wip Server");
 				System.out.println("Client Connected");
 
-				conn = DBConnection.getConnection();
+				//conn = DBConnection.getConnection();
 
 				inputStreamReader = new InputStreamReader(socket.getInputStream());
 				outputStreamWriter = new OutputStreamWriter(socket.getOutputStream());
@@ -49,11 +50,14 @@ public class WipServer {
 					String strAction = strParaList[0];
 
 					if (strAction.contains("create_lot")) {
-						String lotId = bufferedReader.readLine();
+						//String lotId = bufferedReader.readLine();
 						String insertData = bufferedReader.readLine();
-						System.out.println(lotId + insertData);
-
-						create_lot(lotId, insertData);
+						//System.out.println(lotId + insertData);
+						String response = process.createLot(insertData);
+						bufferedWriter.write(response);
+						bufferedWriter.newLine();
+						bufferedWriter.flush();
+						//create_lot(lotId, insertData);
 					}
 				}
 			} catch (IOException e) {
@@ -63,11 +67,11 @@ public class WipServer {
 		}
 
 	}
-
+/*
 	public static void create_lot(String lotId, String insertData) throws SQLException, IOException {
 		// TODO Auto-generated method stub
 
-		check
+		//check
 		// DAO DTO 패턴으로 바뀌어야할 부분
 		String checkPK = "select lot from lot_inf where lot = '" + lotId + "'";
 		pstm = conn.prepareStatement(checkPK);
@@ -92,7 +96,7 @@ public class WipServer {
 			bufferedWriter.newLine();
 			bufferedWriter.flush();
 		}
-
 	}
+	*/
 
 }

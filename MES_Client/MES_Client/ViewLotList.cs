@@ -86,7 +86,7 @@ namespace MES_Client
         private void dataGridView1_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             String clickOper = this.dataGridView1.CurrentRow.Cells["Oper"].Value.ToString();
-            queryWriter.WriteLine("action=get_lotlist;para1=" + clickOper);
+            queryWriter.WriteLine("action=get_lotlist;oper=" + clickOper);
             queryWriter.Flush();
             fillLotlist();
         }
