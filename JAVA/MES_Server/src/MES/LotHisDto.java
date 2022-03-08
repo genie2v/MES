@@ -1,8 +1,10 @@
 package MES;
 
 public class LotHisDto {
-	private String fac, lot, timekey;
-	private String oper, flow, prod, prod_qty;
+	private String fac, lot;
+	String timekey;
+	private String oper, flow, prod;
+	int prod_qty;
 	private String crt_tm, crt_user;
 	private String chg_tm, chg_user;
 
@@ -22,11 +24,11 @@ public class LotHisDto {
 		this.lot = lot;
 	}
 
-	public String lastTimkey() {
+	public String getTimkey() {
 		return timekey;
 	}
 
-	public void setLastTimekey(String timekey) {
+	public void setTimekey(String timekey) {
 		this.timekey = timekey;
 	}
 
@@ -54,11 +56,11 @@ public class LotHisDto {
 		this.prod = prod;
 	}
 
-	public String getProdQty() {
+	public int getProdQty() {
 		return prod_qty;
 	}
 
-	public void setProdQty(String prod_qty) {
+	public void setProdQty(int prod_qty) {
 		this.prod_qty = prod_qty;
 	}
 

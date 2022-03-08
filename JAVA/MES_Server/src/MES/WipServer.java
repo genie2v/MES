@@ -19,7 +19,7 @@ public class WipServer {
 	// create, update, delete...
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		LotInfProcess process = new LotInfProcess();
+		LotInfProcess infProcess = new LotInfProcess();
 
 		while (true) {
 			try {
@@ -52,8 +52,7 @@ public class WipServer {
 					if (strAction.contains("create_lot")) {
 						//String lotId = bufferedReader.readLine();
 						String insertData = bufferedReader.readLine();
-						//System.out.println(lotId + insertData);
-						String response = process.createLot(insertData);
+						String response = infProcess.createLot(insertData);
 						bufferedWriter.write(response);
 						bufferedWriter.newLine();
 						bufferedWriter.flush();

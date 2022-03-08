@@ -1,5 +1,8 @@
 package MES;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class LotInfProcess {
 	private LotInfDao dao;
 
@@ -38,6 +41,10 @@ public class LotInfProcess {
 					}
 				}
 			}
+			
+			Date date = new Date();
+			SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
+			String timeKey = format.format(date);
 
 			LotInfDto dto = new LotInfDto();
 			dto.setLot(lot);
@@ -45,10 +52,13 @@ public class LotInfProcess {
 			dto.setFlow(flow);
 			dto.setProd(prod);
 			dto.setProdQty(prodQty);
+			dto.setLastTimekey(timeKey);
+			
 			int result = dao.add(dto);
-
 			if (result > 0) {
 				response = "LOT 생성";
+				LotHisProcess hisProcess = new LotHisProcess();
+				hisProcess.addHis(insertData);
 			} else {
 				response = "이미 있는 LOT ID";
 			}

@@ -23,7 +23,7 @@ public class LotInfDto {
 		this.lot = lot;
 	}
 
-	public String lastTimkey() {
+	public String getLastTimkey() {
 		return last_timekey;
 	}
 
