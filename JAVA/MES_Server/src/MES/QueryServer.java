@@ -11,6 +11,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import DB.DBConnection;
 
@@ -29,6 +30,7 @@ public class QueryServer {
 	// read
 	public static void main(String[] args) throws SQLException {
 		// TODO Auto-generated method stub
+		LotHisProcess hisProcess = new LotHisProcess();
 
 		while (true) {
 			try {
@@ -115,11 +117,11 @@ public class QueryServer {
 //						// or select_sample(strParaList);
 //					} else 
 					if (strAction.contains("get_oper")) {
-						select_oper("oper");
+						select_oper();
 					} else if (strAction.contains("get_flow")) {
-						select_flow("flow");
+						select_flow();
 					} else if (strAction.contains("get_prod")) {
-						select_prod("prod");
+						select_prod();
 					}
 					/*
 					 * else if (strAction.contains("create_lot")) { String lotId =
@@ -138,7 +140,20 @@ public class QueryServer {
 								}
 							}
 						}
-						get_his(strPara1);
+						ArrayList<String> arr = hisProcess.getHis(strPara1);
+						bufferedWriter.write(String.valueOf(arr.size()));
+						bufferedWriter.newLine();
+						bufferedWriter.flush();
+
+						for (int i = 0; i < arr.size(); i++) {
+							String response = arr.get(i);
+							System.out.println(response);
+							bufferedWriter.write(response);
+							bufferedWriter.newLine();
+							bufferedWriter.flush();
+						}
+
+						// get_his(strPara1);
 					} else if (strAction.contains("get_qty")) {
 						// System.out.println("get_qty");
 						get_qty();
@@ -164,7 +179,7 @@ public class QueryServer {
 
 	}
 
-	public static void select_oper(String oper) throws SQLException, IOException {
+	public static void select_oper() throws SQLException, IOException {
 		String selOper = "select oper from oper_inf";
 		pstm = conn.prepareStatement(selOper);
 		rs = pstm.executeQuery();
@@ -180,7 +195,7 @@ public class QueryServer {
 		bufferedWriter.flush();
 	}
 
-	public static void select_flow(String flow) throws SQLException, IOException {
+	public static void select_flow() throws SQLException, IOException {
 		String selFlow = "select flow from flow_inf";
 		pstm = conn.prepareStatement(selFlow);
 		rs = pstm.executeQuery();
@@ -196,7 +211,7 @@ public class QueryServer {
 		bufferedWriter.flush();
 	}
 
-	public static void select_prod(String prod) throws SQLException, IOException {
+	public static void select_prod() throws SQLException, IOException {
 		String selProd = "select prod from prod_inf";
 		pstm = conn.prepareStatement(selProd);
 		rs = pstm.executeQuery();
@@ -244,43 +259,32 @@ public class QueryServer {
 	 * bufferedWriter.newLine(); bufferedWriter.flush(); } }
 	 */
 
-	public static void get_his(String searchId) throws IOException, SQLException {
-//		String searchId = bufferedReader.readLine();
-//		System.out.println(searchId);
-
-		String countQuery = "select count(lot) from lot_his where lot='" + searchId + "'";
-		pstm = conn.prepareStatement(countQuery);
-		rs = pstm.executeQuery();
-		String count = "";
-		while (rs.next())
-			count = rs.getString(1);
-		bufferedWriter.write(count);
-		bufferedWriter.newLine();
-		bufferedWriter.flush();
-		System.out.println(count);
-
-		String searchHis = "select lot,oper,flow,prod,prod_qty from lot_his where lot = '" + searchId + "'";
-		pstm = conn.prepareStatement(searchHis);
-		rs = pstm.executeQuery();
-		String response;
-		while (rs.next()) {
-			response = "";
-			response += rs.getString("lot") + ",";
-			response += rs.getString("oper") + ",";
-			response += rs.getString("flow") + ",";
-			response += rs.getString("prod") + ",";
-			response += rs.getString("prod_qty");
-
-			System.out.println(response);
-			bufferedWriter.write(response);
-			bufferedWriter.newLine();
-			bufferedWriter.flush();
-		}
-	}
+	/*
+	 * public static void get_his(String searchId) throws IOException, SQLException
+	 * { // String searchId = bufferedReader.readLine(); //
+	 * System.out.println(searchId);
+	 * 
+	 * String countQuery = "select count(*) from lot_his where lot='" + searchId +
+	 * "'"; pstm = conn.prepareStatement(countQuery); rs = pstm.executeQuery();
+	 * String count = ""; while (rs.next()) count = rs.getString(1);
+	 * bufferedWriter.write(count); bufferedWriter.newLine();
+	 * bufferedWriter.flush(); System.out.println(count);
+	 * 
+	 * String searchHis =
+	 * "select lot,oper,flow,prod,prod_qty from lot_his where lot = '" + searchId +
+	 * "'"; pstm = conn.prepareStatement(searchHis); rs = pstm.executeQuery();
+	 * String response; while (rs.next()) { response = ""; response +=
+	 * rs.getString("lot") + ","; response += rs.getString("oper") + ","; response
+	 * += rs.getString("flow") + ","; response += rs.getString("prod") + ",";
+	 * response += rs.getString("prod_qty");
+	 * 
+	 * System.out.println(response); bufferedWriter.write(response);
+	 * bufferedWriter.newLine(); bufferedWriter.flush(); } }
+	 */
 
 	public static void get_qty() throws SQLException, IOException {
 		// System.out.println("getQty");
-		String countQuery = "select count(distinct o.oper) from oper_inf o, lot_his l " + "where o.oper=l.oper";
+		String countQuery = "select count(distinct oper) from lot_inf";
 		pstm = conn.prepareStatement(countQuery);
 		rs = pstm.executeQuery();
 		String count = "";
@@ -291,8 +295,7 @@ public class QueryServer {
 		bufferedWriter.flush();
 		System.out.println(count);
 
-		String groupOper = "select o.oper, count(lot), sum(prod_qty) from oper_inf o, lot_his l "
-				+ "where o.oper = l.oper group by o.oper";
+		String groupOper = "select oper, count(lot), sum(prod_qty) from lot_inf " + "group by oper";
 		pstm = conn.prepareStatement(groupOper);
 		rs = pstm.executeQuery();
 		String response;

@@ -1,6 +1,8 @@
 package MES;
 
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class LotHisProcess {
@@ -13,10 +15,10 @@ public class LotHisProcess {
 	public void addHis(String addData) {
 		String lot = "", oper = "", flow = "", prod = "";
 		int prodQty = 0;
-		
+
 		try {
 			dao.connection();
-			
+
 			String[] strParaList = addData.split(";");
 			for (int i = 0; i < strParaList.length; i++) {
 				String[] strParaValue = strParaList[i].split("=");
@@ -43,7 +45,7 @@ public class LotHisProcess {
 			Date date = new Date();
 			SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
 			String timeKey = format.format(date);
-			
+
 			LotHisDto dto = new LotHisDto();
 			dto.setLot(lot);
 			dto.setOper(oper);
@@ -53,9 +55,29 @@ public class LotHisProcess {
 			dto.setTimekey(timeKey);
 
 			dao.add(dto);
-			
+
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
 	}
+
+	public ArrayList<String> getHis(String lot) {
+		ArrayList<String> response = new ArrayList<String>();
+		try {
+			dao.connection();
+			ArrayList<LotHisDto> arr = dao.lists(lot);
+
+			for (LotHisDto obj : arr) {
+				String his = obj.getLot() + "," + obj.getOper() + "," + obj.getFlow() + "," + obj.getProd() + ","
+						+ String.valueOf(obj.getProdQty());
+				response.add(his);
+			}
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return response;
+	}
+
 }

@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 import DB.DBConnection;
 
@@ -37,6 +38,30 @@ public class LotHisDao {
 		}
 	}
 
+	// lotId로 lot_his 검색
+	public ArrayList<LotHisDto> lists(String lotId) throws SQLException {
+		ArrayList<LotHisDto> result = new ArrayList<LotHisDto>();
+
+		Statement stmt = conn.createStatement();
+		String sql = String.format("select lot, oper, flow, prod, prod_qty from lot_his where lot = '%s'", lotId);
+
+		ResultSet rs = stmt.executeQuery(sql);
+		while (rs.next()) {
+			LotHisDto dto = new LotHisDto();
+			
+			dto.setLot(rs.getString("lot"));
+			dto.setOper(rs.getString("oper"));
+			dto.setFlow(rs.getString("flow"));
+			dto.setProd(rs.getString("prod"));
+			dto.setProdQty(rs.getInt("prod_qty"));
+			
+			result.add(dto);
+		}
+		rs.close();
+		stmt.close();
+		
+		return result;
+	}
 	// modify
 	// remove
 

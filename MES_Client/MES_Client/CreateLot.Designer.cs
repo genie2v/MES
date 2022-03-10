@@ -101,6 +101,7 @@
             // 
             // comboBoxProd
             // 
+            this.comboBoxProd.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxProd.FormattingEnabled = true;
             this.comboBoxProd.Location = new System.Drawing.Point(136, 220);
             this.comboBoxProd.Name = "comboBoxProd";
@@ -109,6 +110,7 @@
             // 
             // comboBoxFlow
             // 
+            this.comboBoxFlow.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxFlow.FormattingEnabled = true;
             this.comboBoxFlow.Location = new System.Drawing.Point(136, 165);
             this.comboBoxFlow.Name = "comboBoxFlow";
@@ -117,6 +119,7 @@
             // 
             // comboBoxOper
             // 
+            this.comboBoxOper.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxOper.FormattingEnabled = true;
             this.comboBoxOper.Location = new System.Drawing.Point(136, 110);
             this.comboBoxOper.Name = "comboBoxOper";

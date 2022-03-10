@@ -81,6 +81,7 @@ namespace MES_Client
             {
                 cbBox.Items.Add(bindData[i]);
             }
+            cbBox.SelectedIndex = 0;
         }
         
         /*
