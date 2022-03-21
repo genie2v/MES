@@ -62,13 +62,13 @@
             this.dataGridView1.Location = new System.Drawing.Point(12, 82);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowTemplate.Height = 27;
-            this.dataGridView1.Size = new System.Drawing.Size(588, 262);
+            this.dataGridView1.Size = new System.Drawing.Size(944, 262);
             this.dataGridView1.TabIndex = 2;
             // 
             // buttonSearch
             // 
             this.buttonSearch.Font = new System.Drawing.Font("맑은 고딕", 13.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.buttonSearch.Location = new System.Drawing.Point(475, 350);
+            this.buttonSearch.Location = new System.Drawing.Point(831, 350);
             this.buttonSearch.Name = "buttonSearch";
             this.buttonSearch.Size = new System.Drawing.Size(125, 60);
             this.buttonSearch.TabIndex = 3;
@@ -80,7 +80,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(612, 422);
+            this.ClientSize = new System.Drawing.Size(968, 422);
             this.Controls.Add(this.buttonSearch);
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.textBoxSearch);

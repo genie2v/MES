@@ -29,9 +29,9 @@ public class LotHisDao {
 		} else {
 
 			sql = String.format("insert into lot_his (fac, lot, timekey, oper, flow, prod,"
-					+ "prod_qty, crt_tm, crt_user, chg_tm, chg_user) values ('PKG', '%s', rpad('%s',20,'0'), '%s',"
-					+ "'%s', '%s', %d, sysdate, 'USER1', sysdate, 'USER1' )", dto.getLot(), dto.getTimkey(),
-					dto.getOper(), dto.getFlow(), dto.getProd(), dto.getProdQty());
+					+ "prod_qty, crt_tm, crt_user, chg_tm, chg_user, proc, txn_cd) values ('PKG', '%s', rpad('%s',20,'0'), '%s',"
+					+ "'%s', '%s', %d, sysdate, 'USER1', sysdate, 'USER1', 'LoggedOut', '%s' )", dto.getLot(), dto.getTimkey(),
+					dto.getOper(), dto.getFlow(), dto.getProd(), dto.getProdQty(), dto.getTxnCd());
 
 			stmt.executeQuery(sql);
 			stmt.close();

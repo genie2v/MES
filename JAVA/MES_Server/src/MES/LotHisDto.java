@@ -2,9 +2,9 @@ package MES;
 
 public class LotHisDto {
 	private String fac, lot;
-	String timekey;
-	private String oper, flow, prod;
-	int prod_qty;
+	private String timekey, txn_cd;
+	private String oper, flow, prod, proc;
+	private int prod_qty;
 	private String crt_tm, crt_user;
 	private String chg_tm, chg_user;
 
@@ -32,6 +32,14 @@ public class LotHisDto {
 		this.timekey = timekey;
 	}
 
+	public String getTxnCd() {
+		return txn_cd;
+	}
+
+	public void setTxnCd(String txn_cd) {
+		this.txn_cd = txn_cd;
+	}
+
 	public String getOper() {
 		return oper;
 	}
@@ -54,6 +62,14 @@ public class LotHisDto {
 
 	public void setProd(String prod) {
 		this.prod = prod;
+	}
+
+	public String getProc() {
+		return proc;
+	}
+
+	public void setProc(String proc) {
+		this.proc = proc;
 	}
 
 	public int getProdQty() {

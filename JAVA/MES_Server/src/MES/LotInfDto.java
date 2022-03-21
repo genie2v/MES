@@ -2,7 +2,7 @@ package MES;
 
 public class LotInfDto {
 	private String fac, lot, last_timekey;
-	private String oper, flow, prod;
+	private String oper, flow, prod, proc;
 	private int prod_qty;
 	private String crt_tm, crt_user;
 	private String chg_tm, chg_user;
@@ -53,6 +53,14 @@ public class LotInfDto {
 
 	public void setProd(String prod) {
 		this.prod = prod;
+	}
+	
+	public String getProc() {
+		return proc;
+	}
+	
+	public void setProc(String proc) {
+		this.proc = proc;
 	}
 
 	public int getProdQty() {

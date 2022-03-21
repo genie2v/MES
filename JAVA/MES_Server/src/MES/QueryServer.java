@@ -30,6 +30,7 @@ public class QueryServer {
 	// read
 	public static void main(String[] args) throws SQLException {
 		// TODO Auto-generated method stub
+		LotInfProcess infProcess = new LotInfProcess();
 		LotHisProcess hisProcess = new LotHisProcess();
 
 		while (true) {
@@ -129,18 +130,17 @@ public class QueryServer {
 					 * System.out.println(lotId + insertData); create_lot(lotId, insertData); }
 					 */
 					else if (strAction.contains("get_his")) {
-						String strPara1 = "";
+						String lotId = "";
 						for (int i = 1; i < strParaList.length; i++) {
 							String[] strParaValue = strParaList[i].split("=");
 							for (int j = 0; j < strParaValue.length; j++) {
 								if (strParaValue[j].equals("lot_id")) {
-									strPara1 = strParaValue[1];
-									// System.out.println(strPara1);
+									lotId = strParaValue[1];
 									break;
 								}
 							}
 						}
-						ArrayList<String> arr = hisProcess.getHis(strPara1);
+						ArrayList<String> arr = hisProcess.getHis(lotId);
 						bufferedWriter.write(String.valueOf(arr.size()));
 						bufferedWriter.newLine();
 						bufferedWriter.flush();
@@ -170,6 +170,23 @@ public class QueryServer {
 							}
 						}
 						get_lotlist(strPara1);
+					} else if (strAction.contains("get_lotinf")) {
+						String lotId = "";
+						for (int i = 1; i < strParaList.length; i++) {
+							String[] strParaValue = strParaList[i].split("=");
+							for (int j = 0; j < strParaValue.length; j++) {
+								if (strParaValue[j].equals("lot_id")) {
+									lotId = strParaValue[1];
+									// System.out.println(strPara1);
+									break;
+								}
+							}
+						}
+						String response = infProcess.getLotInf(lotId);
+						System.out.println(response);
+						bufferedWriter.write(response);
+						bufferedWriter.newLine();
+						bufferedWriter.flush();
 					}
 				}
 			} catch (IOException e) {

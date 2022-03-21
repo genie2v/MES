@@ -1,5 +1,6 @@
 package MES;
 
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -14,7 +15,7 @@ public class LotInfProcess {
 		String response = "";
 		String lot = "", oper = "", flow = "", prod = "";
 		int prodQty = 0;
-		
+
 		try {
 			dao.connection();
 
@@ -41,7 +42,7 @@ public class LotInfProcess {
 					}
 				}
 			}
-			
+
 			Date date = new Date();
 			SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
 			String timeKey = format.format(date);
@@ -53,21 +54,36 @@ public class LotInfProcess {
 			dto.setProd(prod);
 			dto.setProdQty(prodQty);
 			dto.setLastTimekey(timeKey);
-			
+
 			int result = dao.add(dto);
 			if (result > 0) {
 				response = "LOT 생성";
 				LotHisProcess hisProcess = new LotHisProcess();
-				hisProcess.addHis(insertData);
+				hisProcess.addHis("CREATE", insertData);
 			} else {
 				response = "이미 있는 LOT ID";
 			}
-			
+
 			dao.close();
 		} catch (Exception e) {
 			// TODO: handle exception
 			System.out.println(e.toString());
 		}
+		return response;
+	}
+	
+	public String getLotInf(String lotId) {
+		String response = "";
+		
+		try {
+			dao.connection();
+			
+			response = dao.list(lotId);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		return response;
 	}
 

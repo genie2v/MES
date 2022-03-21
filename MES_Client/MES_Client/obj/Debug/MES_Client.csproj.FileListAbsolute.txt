@@ -10,3 +10,5 @@ C:\Users\jy\Documents\MES\MES_Client\MES_Client\obj\Debug\MES_Client.exe
 C:\Users\jy\Documents\MES\MES_Client\MES_Client\obj\Debug\MES_Client.pdb
 C:\Users\jy\Documents\MES\MES_Client\MES_Client\obj\Debug\MES_Client.ViewLotHistory.resources
 C:\Users\jy\Documents\MES\MES_Client\MES_Client\obj\Debug\MES_Client.ViewLotList.resources
+C:\Users\jy\Documents\MES\MES_Client\MES_Client\obj\Debug\MES_Client.MoveIn.resources
+C:\Users\jy\Documents\MES\MES_Client\MES_Client\obj\Debug\MES_Client.MoveOut.resources

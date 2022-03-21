@@ -12,8 +12,9 @@ public class LotHisProcess {
 		dao = new LotHisDao();
 	}
 
-	public void addHis(String addData) {
+	public void addHis(String type, String addData) {
 		String lot = "", oper = "", flow = "", prod = "";
+		String txn_cd = "";
 		int prodQty = 0;
 
 		try {
@@ -42,6 +43,8 @@ public class LotHisProcess {
 				}
 			}
 
+			txn_cd = type;
+
 			Date date = new Date();
 			SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
 			String timeKey = format.format(date);
@@ -53,6 +56,7 @@ public class LotHisProcess {
 			dto.setProd(prod);
 			dto.setProdQty(prodQty);
 			dto.setTimekey(timeKey);
+			dto.setTxnCd(txn_cd);
 
 			dao.add(dto);
 

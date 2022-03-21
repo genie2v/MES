@@ -40,5 +40,19 @@ namespace MES_Client
             ViewLotHistory viewLotHistory = new ViewLotHistory(tcWip, tcQuery);
             viewLotHistory.ShowDialog();
         }
+
+        private void btnMoveIn_Click(object sender, EventArgs e)
+        {
+            MoveIn moveIn = new MoveIn(tcWip, tcQuery);
+            moveIn.ShowDialog();
+        }
+
+        private void btnMoveOut_Click(object sender, EventArgs e)
+        {
+            MoveOut moveOut = new MoveOut(tcWip, tcQuery);
+            moveOut.ShowDialog();
+        }
+
+
     }
 }
