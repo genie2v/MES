@@ -58,7 +58,17 @@ public class LotHisProcess {
 			dto.setTimekey(timeKey);
 			dto.setTxnCd(txn_cd);
 
-			dao.add(dto);
+			if (txn_cd.equals("CREATE")) {
+				dto.setProc("LoggedOut");
+				dao.add(dto);
+			} else if (txn_cd.equals("MOVEIN")) {
+				dto.setProc("LoggedIn");
+				dao.add(dto, addData);
+
+			} else if(txn_cd.equals("MOVEOUT")) {
+				dto.setProc("LoggedOut");
+				dao.add(dto, addData);
+			}
 
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -73,7 +83,7 @@ public class LotHisProcess {
 
 			for (LotHisDto obj : arr) {
 				String his = obj.getLot() + "," + obj.getOper() + "," + obj.getFlow() + "," + obj.getProd() + ","
-						+ String.valueOf(obj.getProdQty());
+						+ String.valueOf(obj.getProdQty() + "," + obj.getProc() + "," + obj.getTxnCd());
 				response.add(his);
 			}
 

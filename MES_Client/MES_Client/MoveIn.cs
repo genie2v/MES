@@ -99,5 +99,15 @@ namespace MES_Client
                 }
             }
         }
+
+        private void btnRun_Click(object sender, EventArgs e)
+        {
+            String lotId = textBoxLotId.Text.ToString().ToUpper();
+            wipWriter.WriteLine("action=movein;lot_id=" + lotId);
+            wipWriter.Flush();
+
+            String receive = wipReader.ReadLine();
+            MessageBox.Show(receive);
+        }
     }
 }

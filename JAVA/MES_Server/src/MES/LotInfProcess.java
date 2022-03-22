@@ -71,19 +71,52 @@ public class LotInfProcess {
 		}
 		return response;
 	}
-	
+
 	public String getLotInf(String lotId) {
+		String response = "";
+
+		try {
+			dao.connection();
+
+			response = dao.list(lotId);
+			
+			dao.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return response;
+	}
+
+	public String moveIn(String lotId) {
 		String response = "";
 		
 		try {
 			dao.connection();
 			
-			response = dao.list(lotId);
+			String moveYN = dao.moveInOut(lotId);
+			if(moveYN.equals("N")) {
+				response = "MOVE IN 실행불가";
+			} else {
+				int result = dao.updateMove(lotId, "LoggedIn");
+				if(result > 0) {
+					response = "LoggedIn 변경";
+					LotHisProcess hisProcess = new LotHisProcess();
+					hisProcess.addHis("MOVEIN", lotId);
+				} else {
+					response ="LoggedIn 변경불가";
+				}
+			}
+			dao.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+		return response;
+	}
+	
+	public String moveOut(String lotId) {
+		String response = "";
 		return response;
 	}
 

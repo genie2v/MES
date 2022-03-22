@@ -40,6 +40,8 @@ namespace MES_Client
             dataTable.Columns.Add("Flow", typeof(String));
             dataTable.Columns.Add("Prod", typeof(String));
             dataTable.Columns.Add("Prod Qty", typeof(String));
+            dataTable.Columns.Add("Proc", typeof(String));
+            dataTable.Columns.Add("TXN_CD", typeof(String));
 
             dataGridView1.DataSource = dataTable;
 
@@ -78,7 +80,7 @@ namespace MES_Client
                 String receive = queryReader.ReadLine();
                 //MessageBox.Show(receive);
                 String[] his = receive.Split(',');
-                dataTable.Rows.Add(his[0], his[1], his[2], his[3], his[4]);
+                dataTable.Rows.Add(his[0], his[1], his[2], his[3], his[4], his[5], his[6]);
                 dataGridView1.DataSource = dataTable;
             }
         }

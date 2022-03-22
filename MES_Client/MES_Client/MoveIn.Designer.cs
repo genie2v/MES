@@ -62,6 +62,7 @@
             this.btnRun.TabIndex = 22;
             this.btnRun.Text = "실행";
             this.btnRun.UseVisualStyleBackColor = true;
+            this.btnRun.Click += new System.EventHandler(this.btnRun_Click);
             // 
             // textBoxLotId
             // 
