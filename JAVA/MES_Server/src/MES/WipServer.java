@@ -67,6 +67,21 @@ public class WipServer {
 						bufferedWriter.newLine();
 						bufferedWriter.flush();
 					} else if (strAction.contains("moveout")) {
+						String lotId = "";
+						for (int i = 1; i < strParaList.length; i++) {
+							String[] strParaValue = strParaList[i].split("=");
+							for (int j = 0; j < strParaValue.length; j++) {
+								if (strParaValue[j].equals("lot_id")) {
+									lotId = strParaValue[1];
+									break;
+								}
+							}
+						}
+						String response = infProcess.moveOut(lotId);
+						System.out.println(response);
+						bufferedWriter.write(response);
+						bufferedWriter.newLine();
+						bufferedWriter.flush();
 					}
 				}
 			} catch (IOException e) {

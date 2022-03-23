@@ -101,11 +101,44 @@ public class LotInfDao {
 
 			sql = String.format(
 					"update lot_inf set last_timekey=rpad('%s',20,'0'), proc='%s', chg_tm = sysdate where lot = '%s'",
-					checkMove, timeKey, lotId);
+					timeKey, checkMove, lotId);
 			result = stmt.executeUpdate(sql);
 		}
+		
+		rs.close();
+		stmt.close();
 
 		return result;
+	}
+
+	// 다음 oper 조회
+	public String nextOper(String lotId) throws SQLException {
+		String result = "";
+
+		Statement stmt = conn.createStatement();
+		String sql = String.format("select oper from flow_oper_inf where (oper_seq, flow) in "
+				+ "(select oper_seq+1, a.flow from flow_oper_inf a, lot_inf b "
+				+ "where lot ='%s' and a.fac=b.fac and a.flow=b.flow and a.oper=b.oper)", lotId);
+
+		ResultSet rs = stmt.executeQuery(sql);
+		while (rs.next()) {
+			result = rs.getString("oper");
+		}
+		
+		rs.close();
+		stmt.close();
+
+		return result;
+	}
+
+	// oper update
+	public void updateOper(String oper, String lotId) throws SQLException {
+		Statement stmt = conn.createStatement();
+		String sql = String.format("update lot_inf set oper = '%s' where lot = '%s'", oper, lotId);
+		
+		stmt.executeUpdate(sql);
+		
+		stmt.close();
 	}
 
 	// modify
@@ -114,4 +147,8 @@ public class LotInfDao {
 	public void close() {
 		DBConnection.close();
 	}
+	
+//	public void rollBack() throws SQLException {
+//		conn.rollback();
+//	}
 }
