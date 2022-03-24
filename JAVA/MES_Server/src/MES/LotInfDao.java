@@ -4,8 +4,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.ArrayList;
 
 import DB.DBConnection;
 
@@ -41,114 +40,63 @@ public class LotInfDao {
 		}
 	}
 
-	// Lot 정보
-	public String list(String lotId) throws SQLException {
-		String result = "";
+	// read (lot으로 검색)
+	public ArrayList<LotInfDto> lotInf(String lotId) throws SQLException {
+		ArrayList<LotInfDto> result = new ArrayList<LotInfDto>();
 
 		Statement stmt = conn.createStatement();
-		String sql = String.format("select oper, flow, prod, prod_qty from lot_inf where lot = '%s'", lotId);
+		String sql = String.format("select * from lot_inf where lot = '%s'", lotId);
 
 		ResultSet rs = stmt.executeQuery(sql);
 		while (rs.next()) {
-			result += "oper=" + rs.getString("oper") + ";flow=" + rs.getString("flow") + ";prod=" + rs.getString("prod")
-					+ ";prod_qty=" + rs.getString("prod_qty");
+			LotInfDto dto = new LotInfDto();
+
+			dto.setLot(rs.getString("lot"));
+			dto.setOper(rs.getString("oper"));
+			dto.setFlow(rs.getString("flow"));
+			dto.setProd(rs.getString("prod"));
+			dto.setProdQty(rs.getInt("prod_qty"));
+			dto.setProc(rs.getString("proc"));
+
+			result.add(dto);
 		}
-
-		rs.close();
-		stmt.close();
-
 		return result;
 	}
 
-	// OPER_INF의 MOVE_INOUT_YN값 확인
-	public String moveInOut(String lotId) throws SQLException {
-		String result = "";
-
-		Statement stmt = conn.createStatement();
-		String sql = String
-				.format("select move_inout_yn from oper_inf o, lot_inf l where o.oper = l.oper and lot = '%s'", lotId);
-
-		ResultSet rs = stmt.executeQuery(sql);
-		while (rs.next()) {
-			result = rs.getString("move_inout_yn");
-		}
-
-		rs.close();
-		stmt.close();
-
-		return result;
-	}
-
-	// PROC Update
-	public int updateMove(String lotId, String checkMove) throws SQLException {
+	// update(proc)
+	public int updateProc(LotInfDto dto) throws SQLException {
 		int result = 0;
-		String proc = "";
+
 		Statement stmt = conn.createStatement();
-		String sql = String.format("select proc from lot_inf where lot = '%s'", lotId);
+		String sql = String.format(
+				"update lot_inf set last_timekey=rpad('%s',20,'0'), proc='%s', chg_tm = sysdate where lot = '%s'",
+				dto.getLastTimkey(), dto.getProc(), dto.getLot());
 
-		ResultSet rs = stmt.executeQuery(sql);
-		while (rs.next()) {
-			proc = rs.getString("proc");
-		}
-		if (proc.equals(checkMove)) {
-			rs.close();
-			stmt.close();
-			return result;
-		} else {
-			Date date = new Date();
-			SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
-			String timeKey = format.format(date);
+		result = stmt.executeUpdate(sql);
 
-			sql = String.format(
-					"update lot_inf set last_timekey=rpad('%s',20,'0'), proc='%s', chg_tm = sysdate where lot = '%s'",
-					timeKey, checkMove, lotId);
-			result = stmt.executeUpdate(sql);
-		}
-		
-		rs.close();
 		stmt.close();
 
 		return result;
 	}
 
-	// 다음 oper 조회
-	public String nextOper(String lotId) throws SQLException {
-		String result = "";
+	// update(oper)
+	public int updateOper(LotInfDto dto) throws SQLException {
+		int result = 0;
 
 		Statement stmt = conn.createStatement();
-		String sql = String.format("select oper from flow_oper_inf where (oper_seq, flow) in "
-				+ "(select oper_seq+1, a.flow from flow_oper_inf a, lot_inf b "
-				+ "where lot ='%s' and a.fac=b.fac and a.flow=b.flow and a.oper=b.oper)", lotId);
+		String sql = String.format(
+				"update lot_inf set last_timekey=rpad('%s',20,'0'), oper = '%s', proc = '%s', chg_tm = sysdate where lot = '%s'",
+				dto.getLastTimkey(), dto.getOper(), dto.getProc(), dto.getLot());
 
-		ResultSet rs = stmt.executeQuery(sql);
-		while (rs.next()) {
-			result = rs.getString("oper");
-		}
-		
-		rs.close();
+		result = stmt.executeUpdate(sql);
+
 		stmt.close();
 
 		return result;
 	}
-
-	// oper update
-	public void updateOper(String oper, String lotId) throws SQLException {
-		Statement stmt = conn.createStatement();
-		String sql = String.format("update lot_inf set oper = '%s' where lot = '%s'", oper, lotId);
-		
-		stmt.executeUpdate(sql);
-		
-		stmt.close();
-	}
-
-	// modify
-	// remove
 
 	public void close() {
 		DBConnection.close();
 	}
-	
-//	public void rollBack() throws SQLException {
-//		conn.rollback();
-//	}
+
 }

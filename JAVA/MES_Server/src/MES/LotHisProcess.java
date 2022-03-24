@@ -64,8 +64,8 @@ public class LotHisProcess {
 			} else if (txn_cd.equals("MOVEIN")) {
 				dto.setProc("LoggedIn");
 				dao.add(dto, addData);
-
 			} else if(txn_cd.equals("MOVEOUT")) {
+				System.out.println(dto.getTxnCd());
 				dto.setProc("LoggedOut");
 				dao.add(dto, addData);
 			}

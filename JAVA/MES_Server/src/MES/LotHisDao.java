@@ -39,12 +39,14 @@ public class LotHisDao {
 
 	// lotId로 테이블 참조해서 add
 	public void add(LotHisDto dto, String lotId) throws SQLException {
+		System.out.println("his add");
 		Statement stmt = conn.createStatement();
 
-		String sql = String.format("select lot from lot_his where lot = '%s' and timekey = '%s'", lotId,
+		String sql = String.format("select lot from lot_his where lot = '%s' and timekey = rpad('%s',20,'0')", lotId,
 				dto.getTimkey());
 		ResultSet rs = stmt.executeQuery(sql);
 		if (rs.next()) {
+			System.out.println(0);
 			stmt.close();
 			return;
 		} else {
@@ -53,6 +55,7 @@ public class LotHisDao {
 							+ "(select fac, lot, last_timekey, oper, flow, prod, prod_qty, crt_tm, crt_user, chg_tm, chg_user, proc from lot_inf where lot = '%s')",
 					lotId);
 			stmt.executeQuery(sql);
+
 			sql = String.format("update lot_his set txn_cd = '%s' where lot ='%s' and timekey=rpad('%s',20,'0')",
 					dto.getTxnCd(), lotId, dto.getTimkey());
 			stmt.executeUpdate(sql);
@@ -65,7 +68,8 @@ public class LotHisDao {
 		ArrayList<LotHisDto> result = new ArrayList<LotHisDto>();
 
 		Statement stmt = conn.createStatement();
-		String sql = String.format("select lot, oper, flow, prod, prod_qty, proc, txn_cd from lot_his where lot = '%s'", lotId);
+		String sql = String.format("select lot, oper, flow, prod, prod_qty, proc, txn_cd from lot_his where lot = '%s'",
+				lotId);
 
 		ResultSet rs = stmt.executeQuery(sql);
 		while (rs.next()) {
@@ -86,8 +90,6 @@ public class LotHisDao {
 
 		return result;
 	}
-	// modify
-	// remove
 
 	public void close() {
 		DBConnection.close();

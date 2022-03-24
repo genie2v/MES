@@ -2,18 +2,23 @@ package MES;
 
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class LotInfProcess {
 	private LotInfDao dao;
+	private OperInfDao operDao;
+	private FlowOperInfDao flowoperDao;
 
 	public LotInfProcess() {
 		dao = new LotInfDao();
+		operDao = new OperInfDao();
+		flowoperDao = new FlowOperInfDao();
 	}
 
 	public String createLot(String insertData) {
 		LotHisProcess hisProcess = new LotHisProcess();
-		
+
 		String response = "";
 		String lot = "", oper = "", flow = "", prod = "";
 		int prodQty = 0;
@@ -75,87 +80,125 @@ public class LotInfProcess {
 
 	public String getLotInf(String lotId) {
 		String response = "";
-
 		try {
 			dao.connection();
+			ArrayList<LotInfDto> arr = dao.lotInf(lotId);
 
-			response = dao.list(lotId);
-
-			dao.close();
+			for (LotInfDto obj : arr) {
+				response = "oper=" + obj.getOper() + ";flow=" + obj.getFlow() + ";prod=" + obj.getProd() + ";prod_qty="
+						+ String.valueOf(obj.getProdQty());
+			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
 		return response;
 	}
 
 	public String moveIn(String lotId) {
 		LotHisProcess hisProcess = new LotHisProcess();
-		
-		String response = "";
 
+		String response = "";
 		try {
 			dao.connection();
+			ArrayList<LotInfDto> arr = dao.lotInf(lotId);
 
-			String moveYN = dao.moveInOut(lotId);
-			if (moveYN.equals("N")) {
-				response = "MOVE IN 실행불가";
-			} else {
-				int result = dao.updateMove(lotId, "LoggedIn");
-				if (result > 0) {
-					response = "LoggedIn 변경";
-					hisProcess.addHis("MOVEIN", lotId);
+			for (LotInfDto obj : arr) {
+				operDao.connection();
+				ArrayList<OperInfDto> operArr = operDao.operInf(obj.getOper());
+
+				String moveYN = "";
+				for (OperInfDto operObj : operArr) {
+					moveYN = operObj.getMoveInOutYn();
+				}
+
+				if (moveYN.equals("Y")) {
+					if (obj.getProc().equals("LoggedIn")) {
+						response = "LoggedIn 변경불가";
+					} else {
+						Date date = new Date();
+						SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
+						String timeKey = format.format(date);
+
+						LotInfDto dto = new LotInfDto();
+						dto.setLot(obj.getLot());
+						dto.setProc("LoggedIn");
+						dto.setLastTimekey(timeKey);
+
+						int result = dao.updateProc(dto);
+						if (result > 0) {
+							response = "LoggedIn 변경";
+							hisProcess.addHis("MOVEIN", dto.getLot());
+						}
+
+					}
+					dao.close();
+					operDao.close();
 				} else {
-					response = "LoggedIn 변경불가";
+					response = "Move In 실행불가";
 				}
 			}
-			dao.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
 		return response;
 	}
 
 	public String moveOut(String lotId) {
 		LotHisProcess hisProcess = new LotHisProcess();
-		
+
 		String response = "";
-
-		dao.connection();
-
 		try {
-//			int result = dao.updateMove(lotId, "LoggedOut");
-//			if (result > 0) {
-//				response = "LoggedOut 변경";
-//				String oper = dao.nextOper(lotId);
-//				if (oper.equals("")) {
-//					hisProcess.addHis("MOVEOUT", lotId);
-//					//dao.rollBack();
-//					//response = "진행 불가";
-//					//return response;
-//				} else {
-//					dao.updateOper(oper, lotId);
-//					hisProcess.addHis("MOVEOUT", lotId);
-//				}
-//			} else {
-//				response = "LoggedOut 변경불가";
-//			}
-			String oper = dao.nextOper(lotId);
-			if(oper.equals("")) {
-				response = "진행불가";
-			} else {
-				int result = dao.updateMove(lotId, "LoggedOut");
-				if(result > 0) {
-					response = "LoggedOut 변경";
-					dao.updateOper(oper, lotId);
-					hisProcess.addHis("MOVEOUT", lotId);
-				} else {
+			dao.connection();
+			ArrayList<LotInfDto> arr = dao.lotInf(lotId);
+
+			for (LotInfDto obj : arr) {
+				if (obj.getProc().equals("LoggedOut")) {
 					response = "LoggedOut 변경불가";
+				} else {
+					flowoperDao.connection();
+					ArrayList<FlowOperInfDto> flowoperArr = flowoperDao.flowoperInf(obj.getFlow(), obj.getOper());
+
+					String operSeq = "";
+					String flow = "";
+					for (FlowOperInfDto flowoperObj : flowoperArr) {
+						operSeq = String.valueOf(flowoperObj.getOperSeq());
+						flow = flowoperObj.getFlow();
+					}
+
+					if (operSeq.equals("")) {
+						response = "Move Out 진행불가";
+					} else {
+						FlowOperInfDto dto = new FlowOperInfDto();
+						dto.setFlow(flow);
+						dto.setOperSeq(Integer.parseInt(operSeq) + 1);
+						String oper = flowoperDao.nextOper(dto);
+
+						Date date = new Date();
+						SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
+						String timeKey = format.format(date);
+						
+						LotInfDto infDto = new LotInfDto();
+						infDto.setLot(obj.getLot());
+						infDto.setOper(oper);
+						infDto.setLastTimekey(timeKey);
+						infDto.setProc("LoggedOut");
+						int result = dao.updateOper(infDto);
+						if (result > 0) {
+							response = "LoggedOut 변경";
+							hisProcess.addHis("MOVEOUT", infDto.getLot());
+						}
+					}
+
 				}
+				
+				dao.close();
+				flowoperDao.close();
 			}
-			
-			dao.close();
+
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
