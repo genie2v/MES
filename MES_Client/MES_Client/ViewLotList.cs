@@ -94,11 +94,10 @@ namespace MES_Client
         void fillLotlist() 
         {
             String count = queryReader.ReadLine();
-            //MessageBox.Show(count);
-            //String receive = "";
 
             dataTable2.Rows.Clear();
             dataGridView2.DataSource = dataTable;
+
             for (int i = 0; i < Convert.ToInt16(count); i++)
             {
                 String receive = queryReader.ReadLine();

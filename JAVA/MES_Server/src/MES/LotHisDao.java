@@ -18,39 +18,28 @@ public class LotHisDao {
 
 	// add
 	public void add(LotHisDto dto) throws SQLException {
-		Statement stmt = conn.createStatement();
-
-		String sql = String.format("select lot from lot_his where lot = '%s' and timekey = '%s'", dto.getLot(),
-				dto.getTimkey());
-		ResultSet rs = stmt.executeQuery(sql);
-		if (rs.next()) {
-			stmt.close();
-			return;
-		} else {
-			sql = String.format("insert into lot_his (fac, lot, timekey, oper, flow, prod,"
+		try {
+			Statement stmt = conn.createStatement();
+			String sql = String.format("insert into lot_his (fac, lot, timekey, oper, flow, prod,"
 					+ "prod_qty, crt_tm, crt_user, chg_tm, chg_user, proc, txn_cd) values ('PKG', '%s', rpad('%s',20,'0'), '%s',"
 					+ "'%s', '%s', %d, sysdate, 'USER1', sysdate, 'USER1', '%s', '%s' )", dto.getLot(), dto.getTimkey(),
 					dto.getOper(), dto.getFlow(), dto.getProd(), dto.getProdQty(), dto.getProc(), dto.getTxnCd());
 
 			stmt.executeQuery(sql);
 			stmt.close();
+			
+		} catch (SQLException e) {
+			// TODO: handle exception
+			System.out.println(e.toString());
+			return;
 		}
 	}
 
-	// lotId로 테이블 참조해서 add
+	// lot으로 lot_inf 참조해서 add
 	public void add(LotHisDto dto, String lotId) throws SQLException {
-		System.out.println("his add");
-		Statement stmt = conn.createStatement();
-
-		String sql = String.format("select lot from lot_his where lot = '%s' and timekey = rpad('%s',20,'0')", lotId,
-				dto.getTimkey());
-		ResultSet rs = stmt.executeQuery(sql);
-		if (rs.next()) {
-			System.out.println(0);
-			stmt.close();
-			return;
-		} else {
-			sql = String.format(
+		try {
+			Statement stmt = conn.createStatement();
+			String sql = String.format(
 					"insert into lot_his(fac, lot, timekey, oper, flow, prod, prod_qty, crt_tm, crt_user, chg_tm, chg_user, proc)"
 							+ "(select fac, lot, last_timekey, oper, flow, prod, prod_qty, crt_tm, crt_user, chg_tm, chg_user, proc from lot_inf where lot = '%s')",
 					lotId);
@@ -60,10 +49,15 @@ public class LotHisDao {
 					dto.getTxnCd(), lotId, dto.getTimkey());
 			stmt.executeUpdate(sql);
 			stmt.close();
+			
+		} catch (SQLException e) {
+			// TODO: handle exception
+			System.out.println(e.toString());
+			return;
 		}
 	}
 
-	// lotId로 lot_his 검색
+	// read(lot_his)
 	public ArrayList<LotHisDto> lists(String lotId) throws SQLException {
 		ArrayList<LotHisDto> result = new ArrayList<LotHisDto>();
 

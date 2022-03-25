@@ -2,7 +2,6 @@ package MES;
 
 import java.io.*;
 import java.net.*;
-//import java.sql.*;
 import java.sql.SQLException;
 
 public class WipServer {

@@ -20,27 +20,24 @@ public class LotInfDao {
 	public int add(LotInfDto dto) throws SQLException {
 		int result = 0;
 
-		Statement stmt = conn.createStatement();
-		String sql = String.format("select lot from lot_inf where lot = '%s'", dto.getLot());
-
-		ResultSet rs = stmt.executeQuery(sql);
-		if (rs.next()) {
-			stmt.close();
-			return result;
-		} else {
-			sql = String.format("insert into lot_inf (fac, lot, last_timekey, oper, flow, prod,"
+		try {
+			Statement stmt = conn.createStatement();
+			String sql = String.format("insert into lot_inf (fac, lot, last_timekey, oper, flow, prod,"
 					+ "prod_qty, crt_tm, crt_user, chg_tm, chg_user, proc) values ('PKG', '%s', rpad('%s',20,'0'), '%s',"
 					+ "'%s', '%s', %d, sysdate, 'USER1', sysdate, 'USER1', 'LoggedOut' )", dto.getLot(),
 					dto.getLastTimkey(), dto.getOper(), dto.getFlow(), dto.getProd(), dto.getProdQty());
-
 			result = stmt.executeUpdate(sql);
-			stmt.close();
 
-			return result;
+		} catch (SQLException e) {
+			// TODO: handle exception
+			System.out.println(e.toString());
+			return -1;
 		}
+
+		return result;
 	}
 
-	// read (lot으로 검색)
+	// read (lot값으로)
 	public ArrayList<LotInfDto> lotInf(String lotId) throws SQLException {
 		ArrayList<LotInfDto> result = new ArrayList<LotInfDto>();
 
@@ -60,6 +57,31 @@ public class LotInfDao {
 
 			result.add(dto);
 		}
+		return result;
+	}
+
+	// read (oper값으로)
+	public ArrayList<LotInfDto> lists(String oper) throws SQLException {
+		ArrayList<LotInfDto> result = new ArrayList<LotInfDto>();
+
+		Statement stmt = conn.createStatement();
+		String sql = String.format("select lot, oper, flow, prod, prod_qty from lot_inf where oper = '%s' order by lot", oper);
+
+		ResultSet rs = stmt.executeQuery(sql);
+		while (rs.next()) {
+			LotInfDto dto = new LotInfDto();
+
+			dto.setLot(rs.getString("lot"));
+			dto.setOper(rs.getString("oper"));
+			dto.setFlow(rs.getString("flow"));
+			dto.setProd(rs.getString("prod"));
+			dto.setProdQty(rs.getInt("prod_qty"));
+
+			result.add(dto);
+		}
+		rs.close();
+		stmt.close();
+
 		return result;
 	}
 

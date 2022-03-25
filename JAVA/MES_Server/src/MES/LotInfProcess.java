@@ -1,24 +1,71 @@
 package MES;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import DB.DBConnection;
+
 public class LotInfProcess {
 	private LotInfDao dao;
 	private OperInfDao operDao;
+	private FlowInfDao flowDao;
+	private ProdInfDao prodDao;
 	private FlowOperInfDao flowoperDao;
 
 	public LotInfProcess() {
 		dao = new LotInfDao();
 		operDao = new OperInfDao();
+		flowDao = new FlowInfDao();
+		prodDao = new ProdInfDao();
 		flowoperDao = new FlowOperInfDao();
+	}
+
+	public String getOper() throws SQLException {
+		String response = "";
+
+		operDao.connection();
+		ArrayList<OperInfDto> arr = operDao.operInf();
+		for (OperInfDto obj : arr) {
+			response += obj.getOper() + ",";
+		}
+		response = response.substring(0, response.length() - 1);
+		// System.out.println(response);
+		return response;
+	}
+
+	public String getFlow() throws SQLException {
+		String response = "";
+
+		flowDao.connection();
+		ArrayList<FlowInfDto> arr = flowDao.flowInf();
+		for (FlowInfDto obj : arr) {
+			response += obj.getFlow() + ",";
+		}
+		response = response.substring(0, response.length() - 1);
+		// System.out.println(response);
+		return response;
+	}
+
+	public String getProd() throws SQLException {
+		String response = "";
+
+		prodDao.connection();
+		ArrayList<ProdInfDto> arr = prodDao.prodInf();
+		for (ProdInfDto obj : arr) {
+			response += obj.getProd() + ",";
+		}
+		response = response.substring(0, response.length() - 1);
+		// System.out.println(response);
+		return response;
 	}
 
 	public String createLot(String insertData) {
 		LotHisProcess hisProcess = new LotHisProcess();
-
 		String response = "";
 		String lot = "", oper = "", flow = "", prod = "";
 		int prodQty = 0;
@@ -63,11 +110,11 @@ public class LotInfProcess {
 			dto.setLastTimekey(timeKey);
 
 			int result = dao.add(dto);
-			if (result > 0) {
+			if (result == -1) {
+				response = "중복되는 LOT";
+			} else {
 				response = "LOT 생성";
 				hisProcess.addHis("CREATE", insertData);
-			} else {
-				response = "이미 있는 LOT ID";
 			}
 
 			dao.close();
@@ -75,6 +122,7 @@ public class LotInfProcess {
 			// TODO: handle exception
 			System.out.println(e.toString());
 		}
+
 		return response;
 	}
 
@@ -98,7 +146,6 @@ public class LotInfProcess {
 
 	public String moveIn(String lotId) {
 		LotHisProcess hisProcess = new LotHisProcess();
-
 		String response = "";
 		try {
 			dao.connection();
@@ -180,7 +227,7 @@ public class LotInfProcess {
 						Date date = new Date();
 						SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
 						String timeKey = format.format(date);
-						
+
 						LotInfDto infDto = new LotInfDto();
 						infDto.setLot(obj.getLot());
 						infDto.setOper(oper);
@@ -194,7 +241,7 @@ public class LotInfProcess {
 					}
 
 				}
-				
+
 				dao.close();
 				flowoperDao.close();
 			}
@@ -203,7 +250,47 @@ public class LotInfProcess {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
 		return response;
+	}
+
+	public ArrayList<String> getQty() throws SQLException {
+		ArrayList<String> result = new ArrayList<String>();
+
+		Connection conn = DBConnection.getConnection();
+		Statement stmt = conn.createStatement();
+		String sql = "select oper, count(lot), sum(prod_qty) from lot_inf group by oper order by oper";
+		ResultSet rs = stmt.executeQuery(sql);
+
+		while (rs.next()) {
+			String response = "";
+			response += rs.getString(1) + ",";
+			response += rs.getString(2) + ",";
+			response += rs.getString(3);
+
+			result.add(response);
+		}
+
+		return result;
+	}
+
+	public ArrayList<String> getLotList(String oper) {
+		ArrayList<String> result = new ArrayList<String>();
+		try {
+			dao.connection();
+			ArrayList<LotInfDto> arr = dao.lists(oper);
+
+			for (LotInfDto obj : arr) {
+				String response = obj.getLot() + "," + obj.getOper() + "," + obj.getFlow() + "," + obj.getProd() + ","
+						+ String.valueOf(obj.getProdQty());
+				result.add(response);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return result;
 	}
 
 }
