@@ -37,6 +37,58 @@ public class FlowOperInfDao {
 		return result;
 	}
 
+	// read
+	public FlowOperInfDto read(String fac, String flow, String oper) throws SQLException {
+		FlowOperInfDto dto = null;
+
+		Statement stmt = conn.createStatement();
+		String sql = String.format("select * from flow_oper_inf where fac = '%s' and flow = '%s' and oper = '%s'", fac, flow, oper);
+
+		ResultSet rs = stmt.executeQuery(sql);
+		while (rs.next()) {
+			dto = new FlowOperInfDto();
+
+			dto.setFac(rs.getString("fac"));
+			dto.setFlow(rs.getString("flow"));
+			dto.setOper(rs.getString("oper"));
+			dto.setOperSeq(rs.getInt("oper_seq"));
+			dto.setCrtTm(rs.getDate("crt_tm"));
+			dto.setCrtIser(rs.getString("crt_user"));
+			dto.setChgTm(rs.getDate("chg_tm"));
+			dto.setCHgIser(rs.getString("chg_user"));
+
+			result.add(dto);
+		}
+
+		return dto;
+	}
+
+
+	public FlowOperInfDto readByOperSeq(String fac, String flow, String seq) throws SQLException {
+		FlowOperInfDto dto = null;
+
+		Statement stmt = conn.createStatement();
+		String sql = String.format("select * from flow_oper_inf where fac = '%s' flow = '%s' and seq = '%s'", fac, flow, seq);
+
+		ResultSet rs = stmt.executeQuery(sql);
+		while (rs.next()) {
+			dto = new FlowOperInfDto();
+
+			dto.setFac(rs.getString("fac"));
+			dto.setFlow(rs.getString("flow"));
+			dto.setOper(rs.getString("oper"));
+			dto.setOperSeq(rs.getInt("oper_seq"));
+			dto.setCrtTm(rs.getDate("crt_tm"));
+			dto.setCrtIser(rs.getString("crt_user"));
+			dto.setChgTm(rs.getDate("chg_tm"));
+			dto.setCHgIser(rs.getString("chg_user"));
+
+			result.add(dto);
+		}
+
+		return dto;
+	}
+
 	// 다음 oper read
 	public String nextOper(FlowOperInfDto dto) throws SQLException {
 		String result = "";

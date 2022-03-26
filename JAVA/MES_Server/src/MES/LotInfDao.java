@@ -60,6 +60,32 @@ public class LotInfDao {
 		return result;
 	}
 
+	// read 는 최대한 모든 컬럼을 넣도록
+	public LotInfDto read(String lotId) throws SQLException {
+		LotInfDto dto = null;
+		Statement stmt = conn.createStatement();
+		String sql = String.format("select * from lot_inf where lot = '%s'", lotId);
+
+		ResultSet rs = stmt.executeQuery(sql);
+		while (rs.next()) {
+			dto = new LotInfDto();
+			dto.setFac(rs.getString("fac"));
+			dto.setLot(rs.getString("lot"));
+			dto.setLastTimekey(rs.getString("last_timekey"));
+			dto.setOper(rs.getString("oper"));
+			dto.setFlow(rs.getString("flow"));
+			dto.setProc(rs.getString("proc"));
+			dto.setProd(rs.getString("prod"));
+			dto.setProdQty(rs.getInt("prod_qty"));
+			dto.setCrtTm(rs.getDate("crt_tm"));
+			dto.setCrtIser(rs.getString("crt_user"));
+			dto.setChgTm(rs.getDate("chg_tm"));
+			dto.setCHgIser(rs.getString("chg_user"));
+			result.add(dto);
+			break;
+		}
+		return dto;
+	}
 	// read (oper값으로)
 	public ArrayList<LotInfDto> lists(String oper) throws SQLException {
 		ArrayList<LotInfDto> result = new ArrayList<LotInfDto>();
@@ -117,8 +143,32 @@ public class LotInfDao {
 		return result;
 	}
 
+		public int update(LotInfDto dto) throws SQLException {
+		int result = 0;
+
+		Statement stmt = conn.createStatement();
+		String sql = String.format(
+				"update lot_inf "
+				+ "set last_timekey=rpad('%s',20,'0')"
+				+ ", oper = '%s'"
+				+ ", flow = '%s'"
+				+ ", proc ='%s'"
+				+ ", prod = '%s'"
+				+ ", prod_qty = %d"
+				+ ", chg_tm = sysdate"
+				+ ", chg_user = 'USER1'"
+				+ "  where lot = '%s'",
+				dto.getLastTimkey(), dto.getOper(), dto.getFlow(), dto.getProc(), dto.getProd(), dto.getProdQty() dto.getLot());
+
+		result = stmt.executeUpdate(sql);
+
+		stmt.close();
+
+		return result;
+	}
+
 	public void close() {
 		DBConnection.close();
 	}
-
+ 
 }
