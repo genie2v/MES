@@ -27,7 +27,7 @@ public class LotHisDao {
 
 			stmt.executeQuery(sql);
 			stmt.close();
-			
+
 		} catch (SQLException e) {
 			// TODO: handle exception
 			System.out.println(e.toString());
@@ -49,7 +49,7 @@ public class LotHisDao {
 					dto.getTxnCd(), lotId, dto.getTimkey());
 			stmt.executeUpdate(sql);
 			stmt.close();
-			
+
 		} catch (SQLException e) {
 			// TODO: handle exception
 			System.out.println(e.toString());
@@ -57,31 +57,78 @@ public class LotHisDao {
 		}
 	}
 
-	// read(lot_his)
-	public ArrayList<LotHisDto> lists(String lotId) throws SQLException {
-		ArrayList<LotHisDto> result = new ArrayList<LotHisDto>();
-
+	// read
+	public LotHisDto read(String lotId, String timekey) throws SQLException {
+		LotHisDto dto = null;
 		Statement stmt = conn.createStatement();
-		String sql = String.format("select lot, oper, flow, prod, prod_qty, proc, txn_cd from lot_his where lot = '%s'",
-				lotId);
+		String sql = String.format("select * from lot_his where lot = '%s' and timekey = '%s'", lotId, timekey);
 
 		ResultSet rs = stmt.executeQuery(sql);
 		while (rs.next()) {
-			LotHisDto dto = new LotHisDto();
+			dto = new LotHisDto();
 
+			dto.setFac(rs.getString("fac"));
 			dto.setLot(rs.getString("lot"));
+			dto.setTimekey(rs.getString("timekey"));
+			dto.setTxnCd(rs.getString("txn_cd"));
+			dto.setOper(rs.getString("oper"));
+			dto.setFlow(rs.getString("flow"));
+			dto.setProc(rs.getString("proc"));
+			dto.setProd(rs.getString("prod"));
+			dto.setProdQty(rs.getInt("prod_qty"));
+			dto.setCrtTm(rs.getDate("crt_tm"));
+			dto.setCrtUser(rs.getString("crt_user"));
+			dto.setChgTm(rs.getDate("chg_tm"));
+			dto.setChgUser(rs.getString("chg_user"));
+
+			break;
+		}
+
+		stmt.close();
+		rs.close();
+		
+		return dto;
+	}
+
+	// read(lot_his)
+	public ArrayList<LotHisDto> read(String lotId) throws SQLException {
+		ArrayList<LotHisDto> result = new ArrayList<LotHisDto>();
+		LotHisDto dto = null;
+
+		Statement stmt = conn.createStatement();
+		String sql = String.format("select * from lot_his where lot = '%s'", lotId);
+
+		ResultSet rs = stmt.executeQuery(sql);
+		while (rs.next()) {
+			dto = new LotHisDto();
+
+			dto.setFac(rs.getString("fac"));
+			dto.setLot(rs.getString("lot"));
+			dto.setTimekey(rs.getString("timekey"));
 			dto.setOper(rs.getString("oper"));
 			dto.setFlow(rs.getString("flow"));
 			dto.setProd(rs.getString("prod"));
+			dto.setCrtTm(rs.getDate("crt_tm"));
+			dto.setCrtUser(rs.getString("crt_user"));
+			dto.setChgTm(rs.getDate("chg_tm"));
+			dto.setChgUser(rs.getString("chg_user"));
 			dto.setProdQty(rs.getInt("prod_qty"));
 			dto.setProc(rs.getString("proc"));
 			dto.setTxnCd(rs.getString("txn_cd"));
 
 			result.add(dto);
 		}
+		
 		rs.close();
 		stmt.close();
 
+		return result;
+	}
+
+	// update
+	public int update(LotHisDto dto) throws SQLException {
+		int result = 0;
+		
 		return result;
 	}
 

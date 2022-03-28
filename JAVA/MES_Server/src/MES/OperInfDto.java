@@ -1,9 +1,11 @@
 package MES;
 
+import java.sql.Date;
+
 public class OperInfDto {
 	private String fac, oper;
-	private String crt_tm, crt_user;
-	private String chg_tm, chg_user;
+	Date crt_tm, chg_tm;
+	private String crt_user, chg_user;
 	private String move_inout_yn;
 
 	public String getFac() {
@@ -22,11 +24,11 @@ public class OperInfDto {
 		this.oper = oper;
 	}
 
-	public String getCrtTm() {
+	public Date getCrtTm() {
 		return crt_tm;
 	}
 
-	public void setCrtTm(String crt_tm) {
+	public void setCrtTm(Date crt_tm) {
 		this.crt_tm = crt_tm;
 	}
 
@@ -38,11 +40,11 @@ public class OperInfDto {
 		this.chg_user = crt_user;
 	}
 
-	public String getChgTm() {
+	public Date getChgTm() {
 		return chg_tm;
 	}
 
-	public void setChgTm(String chg_tm) {
+	public void setChgTm(Date chg_tm) {
 		this.chg_tm = chg_tm;
 	}
 

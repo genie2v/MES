@@ -27,40 +27,18 @@ public class LotInfDao {
 					+ "'%s', '%s', %d, sysdate, 'USER1', sysdate, 'USER1', 'LoggedOut' )", dto.getLot(),
 					dto.getLastTimkey(), dto.getOper(), dto.getFlow(), dto.getProd(), dto.getProdQty());
 			result = stmt.executeUpdate(sql);
-
+			
+			stmt.close();
 		} catch (SQLException e) {
 			// TODO: handle exception
 			System.out.println(e.toString());
 			return -1;
 		}
-
+		
 		return result;
 	}
 
-	// read (lot값으로)
-	public ArrayList<LotInfDto> lotInf(String lotId) throws SQLException {
-		ArrayList<LotInfDto> result = new ArrayList<LotInfDto>();
-
-		Statement stmt = conn.createStatement();
-		String sql = String.format("select * from lot_inf where lot = '%s'", lotId);
-
-		ResultSet rs = stmt.executeQuery(sql);
-		while (rs.next()) {
-			LotInfDto dto = new LotInfDto();
-
-			dto.setLot(rs.getString("lot"));
-			dto.setOper(rs.getString("oper"));
-			dto.setFlow(rs.getString("flow"));
-			dto.setProd(rs.getString("prod"));
-			dto.setProdQty(rs.getInt("prod_qty"));
-			dto.setProc(rs.getString("proc"));
-
-			result.add(dto);
-		}
-		return result;
-	}
-
-	// read 는 최대한 모든 컬럼을 넣도록
+	// read
 	public LotInfDto read(String lotId) throws SQLException {
 		LotInfDto dto = null;
 		Statement stmt = conn.createStatement();
@@ -69,6 +47,7 @@ public class LotInfDao {
 		ResultSet rs = stmt.executeQuery(sql);
 		while (rs.next()) {
 			dto = new LotInfDto();
+			
 			dto.setFac(rs.getString("fac"));
 			dto.setLot(rs.getString("lot"));
 			dto.setLastTimekey(rs.getString("last_timekey"));
@@ -78,87 +57,64 @@ public class LotInfDao {
 			dto.setProd(rs.getString("prod"));
 			dto.setProdQty(rs.getInt("prod_qty"));
 			dto.setCrtTm(rs.getDate("crt_tm"));
-			dto.setCrtIser(rs.getString("crt_user"));
+			dto.setCrtUser(rs.getString("crt_user"));
 			dto.setChgTm(rs.getDate("chg_tm"));
-			dto.setCHgIser(rs.getString("chg_user"));
-			result.add(dto);
+			dto.setChgUser(rs.getString("chg_user"));
 			break;
 		}
+		
+		stmt.close();
+		rs.close();
+		
 		return dto;
 	}
-	// read (oper값으로)
-	public ArrayList<LotInfDto> lists(String oper) throws SQLException {
-		ArrayList<LotInfDto> result = new ArrayList<LotInfDto>();
 
+	// read (oper값으로), getLotList에서 사용(View Lot List)
+	public ArrayList<LotInfDto> readByOper(String oper) throws SQLException {
+		ArrayList<LotInfDto> result = new ArrayList<LotInfDto>();
+		LotInfDto dto = null;
+		
 		Statement stmt = conn.createStatement();
-		String sql = String.format("select lot, oper, flow, prod, prod_qty from lot_inf where oper = '%s' order by lot", oper);
+		String sql = String.format("select * from lot_inf where oper = '%s' order by lot",
+				oper);
 
 		ResultSet rs = stmt.executeQuery(sql);
 		while (rs.next()) {
-			LotInfDto dto = new LotInfDto();
+			dto = new LotInfDto();
 
+			dto.setFac(rs.getString("fac"));
 			dto.setLot(rs.getString("lot"));
+			dto.setLastTimekey(rs.getString("last_timekey"));
 			dto.setOper(rs.getString("oper"));
 			dto.setFlow(rs.getString("flow"));
+			dto.setProc(rs.getString("proc"));
 			dto.setProd(rs.getString("prod"));
 			dto.setProdQty(rs.getInt("prod_qty"));
+			dto.setCrtTm(rs.getDate("crt_tm"));
+			dto.setCrtUser(rs.getString("crt_user"));
+			dto.setChgTm(rs.getDate("chg_tm"));
+			dto.setChgUser(rs.getString("chg_user"));
 
 			result.add(dto);
 		}
+		
 		rs.close();
 		stmt.close();
 
 		return result;
 	}
 
-	// update(proc)
-	public int updateProc(LotInfDto dto) throws SQLException {
+	// update
+	public int update(LotInfDto dto) throws SQLException {
 		int result = 0;
 
 		Statement stmt = conn.createStatement();
 		String sql = String.format(
-				"update lot_inf set last_timekey=rpad('%s',20,'0'), proc='%s', chg_tm = sysdate where lot = '%s'",
-				dto.getLastTimkey(), dto.getProc(), dto.getLot());
-
-		result = stmt.executeUpdate(sql);
-
-		stmt.close();
-
-		return result;
-	}
-
-	// update(oper)
-	public int updateOper(LotInfDto dto) throws SQLException {
-		int result = 0;
-
-		Statement stmt = conn.createStatement();
-		String sql = String.format(
-				"update lot_inf set last_timekey=rpad('%s',20,'0'), oper = '%s', proc = '%s', chg_tm = sysdate where lot = '%s'",
-				dto.getLastTimkey(), dto.getOper(), dto.getProc(), dto.getLot());
-
-		result = stmt.executeUpdate(sql);
-
-		stmt.close();
-
-		return result;
-	}
-
-		public int update(LotInfDto dto) throws SQLException {
-		int result = 0;
-
-		Statement stmt = conn.createStatement();
-		String sql = String.format(
-				"update lot_inf "
-				+ "set last_timekey=rpad('%s',20,'0')"
-				+ ", oper = '%s'"
-				+ ", flow = '%s'"
-				+ ", proc ='%s'"
-				+ ", prod = '%s'"
-				+ ", prod_qty = %d"
-				+ ", chg_tm = sysdate"
-				+ ", chg_user = 'USER1'"
-				+ "  where lot = '%s'",
-				dto.getLastTimkey(), dto.getOper(), dto.getFlow(), dto.getProc(), dto.getProd(), dto.getProdQty() dto.getLot());
+				"update lot_inf set last_timekey=rpad('%s',20,'0'), oper = '%s', flow = '%s'"
+						+ ", proc ='%s', prod = '%s', prod_qty = %d, chg_tm = sysdate"
+						+ ", chg_user = 'USER1' where lot = '%s'",
+				dto.getLastTimkey(), dto.getOper(), dto.getFlow(), dto.getProc(), dto.getProd(), dto.getProdQty(),
+				dto.getLot());
 
 		result = stmt.executeUpdate(sql);
 
@@ -170,5 +126,5 @@ public class LotInfDao {
 	public void close() {
 		DBConnection.close();
 	}
- 
+
 }

@@ -17,39 +17,71 @@ public class OperInfDao {
 	}
 
 	// read
-	public ArrayList<OperInfDto> operInf() throws SQLException {
+	public ArrayList<OperInfDto> read() throws SQLException {
 		ArrayList<OperInfDto> result = new ArrayList<OperInfDto>();
+		OperInfDto dto = null;
 
 		Statement stmt = conn.createStatement();
 		String sql = "select * from oper_inf";
-		
-		ResultSet rs = stmt.executeQuery(sql);
-		while(rs.next()) {
-			OperInfDto dto = new OperInfDto();
-			
-			dto.setOper(rs.getString("oper"));
-			result.add(dto);
-		}
-		
-		return result;
-	}
-
-	// read(oper값으로)
-	public ArrayList<OperInfDto> operInf(String oper) throws SQLException {
-		ArrayList<OperInfDto> result = new ArrayList<OperInfDto>();
-
-		Statement stmt = conn.createStatement();
-		String sql = String.format("select * from oper_inf where oper = '%s'", oper);
 
 		ResultSet rs = stmt.executeQuery(sql);
 		while (rs.next()) {
-			OperInfDto dto = new OperInfDto();
+			dto = new OperInfDto();
 
+			dto.setFac(rs.getString("fac"));
 			dto.setOper(rs.getString("oper"));
 			dto.setMoveInOutYn(rs.getString("move_inout_yn"));
+			dto.setCrtTm(rs.getDate("crt_tm"));
+			dto.setCrtUser(rs.getString("crt_user"));
+			dto.setChgTm(rs.getDate("chg_tm"));
+			dto.setChgUser(rs.getString("chg_user"));
 			result.add(dto);
 		}
 
+		return result;
+	}
+
+	// read
+	public OperInfDto read(String fac, String oper) throws SQLException {
+		OperInfDto dto = null;
+
+		Statement stmt = conn.createStatement();
+		String sql = String.format("select * from oper_inf where fac = '%s' and oper = '%s'", fac, oper);
+
+		ResultSet rs = stmt.executeQuery(sql);
+		while (rs.next()) {
+			dto = new OperInfDto();
+			
+			dto.setFac(rs.getString("fac"));
+			dto.setOper(rs.getString("oper"));
+			dto.setMoveInOutYn(rs.getString("move_inout_yn"));
+			dto.setCrtTm(rs.getDate("crt_tm"));
+			dto.setCrtUser(rs.getString("crt_user"));
+			dto.setChgTm(rs.getDate("chg_tm"));
+			dto.setChgUser(rs.getString("chg_user"));
+
+			break;
+		}
+		
+		stmt.close();
+		rs.close();
+		
+		return dto;
+	}
+
+	// update
+	public int update(OperInfDto dto) throws SQLException {
+		int result = 0;
+
+		Statement stmt = conn.createStatement();
+		String sql = String.format(
+				"update oper_inf set move_inout_yn = '%s', chg_tm = sysdate, chg_user = 'USER1' where fac = '%s' and oper = '%s'",
+				dto.getMoveInOutYn(), dto.getFac(), dto.getOper());
+		
+		result = stmt.executeUpdate(sql);
+		
+		stmt.close();
+		
 		return result;
 	}
 

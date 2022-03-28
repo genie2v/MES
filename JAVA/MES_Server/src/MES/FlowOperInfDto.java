@@ -1,10 +1,12 @@
 package MES;
 
+import java.sql.Date;
+
 public class FlowOperInfDto {
 	private String fac, flow, oper;
 	private int oper_seq;
-	private String crt_tm, crt_user;
-	private String chg_tm, chg_user;
+	Date crt_tm, chg_tm;
+	private String crt_user, chg_user;
 
 	public String getFac() {
 		return fac;
@@ -38,11 +40,11 @@ public class FlowOperInfDto {
 		this.oper_seq = oper_seq;
 	}
 
-	public String getCrtTm() {
+	public Date getCrtTm() {
 		return crt_tm;
 	}
 
-	public void setCrtTm(String crt_tm) {
+	public void setCrtTm(Date crt_tm) {
 		this.crt_tm = crt_tm;
 	}
 
@@ -54,11 +56,11 @@ public class FlowOperInfDto {
 		this.crt_user = crt_user;
 	}
 
-	public String getChgTm() {
+	public Date getChgTm() {
 		return chg_tm;
 	}
 
-	public void setChgTm(String chg_tm) {
+	public void setChgTm(Date chg_tm) {
 		this.chg_tm = chg_tm;
 	}
 

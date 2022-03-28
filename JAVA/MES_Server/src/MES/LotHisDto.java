@@ -1,12 +1,14 @@
 package MES;
 
+import java.sql.Date;
+
 public class LotHisDto {
 	private String fac, lot;
 	private String timekey, txn_cd;
 	private String oper, flow, prod, proc;
 	private int prod_qty;
-	private String crt_tm, crt_user;
-	private String chg_tm, chg_user;
+	Date crt_tm, chg_tm;
+	private String crt_user, chg_user;
 
 	public String getFac() {
 		return fac;
@@ -80,11 +82,11 @@ public class LotHisDto {
 		this.prod_qty = prod_qty;
 	}
 
-	public String getCrtTm() {
+	public Date getCrtTm() {
 		return crt_tm;
 	}
 
-	public void setCrtTm(String crt_tm) {
+	public void setCrtTm(Date crt_tm) {
 		this.crt_tm = crt_tm;
 	}
 
@@ -96,11 +98,11 @@ public class LotHisDto {
 		this.crt_user = crt_user;
 	}
 
-	public String getChgTm() {
+	public Date getChgTm() {
 		return chg_tm;
 	}
 
-	public void setChgTm(String chg_tm) {
+	public void setChgTm(Date chg_tm) {
 		this.chg_tm = chg_tm;
 	}
 

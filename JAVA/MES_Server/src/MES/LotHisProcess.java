@@ -64,31 +64,33 @@ public class LotHisProcess {
 			} else if (txn_cd.equals("MOVEIN")) {
 				dto.setProc("LoggedIn");
 				dao.add(dto, addData);
-			} else if(txn_cd.equals("MOVEOUT")) {
-				System.out.println(dto.getTxnCd());
+			} else if (txn_cd.equals("MOVEOUT")) {
 				dto.setProc("LoggedOut");
 				dao.add(dto, addData);
 			}
-
+			dao.close();
 		} catch (Exception e) {
 			// TODO: handle exception
+			System.out.println(e.toString());
 		}
 	}
 
+	// View Lot History
 	public ArrayList<String> getHis(String lot) {
 		ArrayList<String> response = new ArrayList<String>();
 		try {
 			dao.connection();
-			ArrayList<LotHisDto> arr = dao.lists(lot);
+			ArrayList<LotHisDto> arr = dao.read(lot);
 
 			for (LotHisDto obj : arr) {
 				String his = obj.getLot() + "," + obj.getOper() + "," + obj.getFlow() + "," + obj.getProd() + ","
 						+ String.valueOf(obj.getProdQty() + "," + obj.getProc() + "," + obj.getTxnCd());
 				response.add(his);
 			}
+			dao.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println(e.toString());
 		}
 		return response;
 	}
