@@ -16,7 +16,23 @@ public class OperInfDao {
 		return conn;
 	}
 
-	// read
+	// create
+	public int create(OperInfDto dto) throws SQLException {
+		int result = 0;
+
+		Statement stmt = conn.createStatement();
+		String sql = String.format(
+				"insert into oper_inf (fac, oper, move_inout_yn, crt_tm, crt_user, chg_tm, chg_user) values ('PKG', '%s', '%s', sysdate, 'USER1', sysdate, 'USER1')",
+				dto.getOper(), dto.getMoveInOutYn());
+
+		result = stmt.executeUpdate(sql);
+
+		stmt.close();
+
+		return result;
+	}
+
+	// read (Create Lot comboBox bind)
 	public ArrayList<OperInfDto> read() throws SQLException {
 		ArrayList<OperInfDto> result = new ArrayList<OperInfDto>();
 		OperInfDto dto = null;
@@ -51,7 +67,7 @@ public class OperInfDao {
 		ResultSet rs = stmt.executeQuery(sql);
 		while (rs.next()) {
 			dto = new OperInfDto();
-			
+
 			dto.setFac(rs.getString("fac"));
 			dto.setOper(rs.getString("oper"));
 			dto.setMoveInOutYn(rs.getString("move_inout_yn"));
@@ -62,10 +78,10 @@ public class OperInfDao {
 
 			break;
 		}
-		
+
 		stmt.close();
 		rs.close();
-		
+
 		return dto;
 	}
 
@@ -77,11 +93,24 @@ public class OperInfDao {
 		String sql = String.format(
 				"update oper_inf set move_inout_yn = '%s', chg_tm = sysdate, chg_user = 'USER1' where fac = '%s' and oper = '%s'",
 				dto.getMoveInOutYn(), dto.getFac(), dto.getOper());
+
+		result = stmt.executeUpdate(sql);
+
+		stmt.close();
+
+		return result;
+	}
+
+	// delete
+	public int delete(String fac, String oper) throws SQLException {
+		int result = 0;
+		
+		Statement stmt = conn.createStatement();
+		String sql = String.format("delete from oper_inf where fac = '%s' and oper = '%s'", fac, oper);
 		
 		result = stmt.executeUpdate(sql);
 		
 		stmt.close();
-		
 		return result;
 	}
 

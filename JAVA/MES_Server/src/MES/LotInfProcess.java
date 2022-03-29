@@ -25,6 +25,7 @@ public class LotInfProcess {
 		flowoperDao = new FlowOperInfDao();
 	}
 
+	// Create Lot comboBox bind
 	public String getOper() throws SQLException {
 		String response = "";
 
@@ -108,13 +109,14 @@ public class LotInfProcess {
 			dto.setProd(prod);
 			dto.setProdQty(prodQty);
 			dto.setLastTimekey(timeKey);
+			dto.setProc("LoggedOut");
 
-			int result = lotDao.add(dto);
+			int result = lotDao.create(dto);
 			if (result == -1) {
 				response = "중복되는 LOT";
 			} else {
 				response = "LOT 생성";
-				hisProcess.addHis("CREATE", insertData);
+				hisProcess.addHis(dto, "CREATE");
 			}
 
 			lotDao.close();
@@ -148,6 +150,7 @@ public class LotInfProcess {
 	public String moveIn(String lotId) {
 		LotHisProcess hisProcess = new LotHisProcess();
 		String response = "";
+		
 		try {
 			lotDao.connection();
 			operDao.connection();
@@ -189,7 +192,7 @@ public class LotInfProcess {
 			int result = lotDao.update(dtoLot);
 			if (result > 0) {
 				response = "LoggedIn 변경";
-				hisProcess.addHis("MOVEIN", dtoLot.getLot());
+				hisProcess.addHis(dtoLot, "MOVEIN");
 			}
 
 			lotDao.close();
@@ -205,8 +208,8 @@ public class LotInfProcess {
 
 	public String moveOut(String lotId) {
 		LotHisProcess hisProcess = new LotHisProcess();
-
 		String response = "";
+		
 		try {
 			lotDao.connection();
 			flowoperDao.connection();
@@ -247,7 +250,7 @@ public class LotInfProcess {
 			int result = lotDao.update(dtoLot);
 			if (result > 0) {
 				response = "LoggedOut 변경";
-				hisProcess.addHis("MOVEOUT", dtoLot.getLot());
+				hisProcess.addHis(dtoLot, "MOVEOUT");
 			}
 
 			lotDao.close();
@@ -286,6 +289,7 @@ public class LotInfProcess {
 
 	public ArrayList<String> getLotList(String oper) {
 		ArrayList<String> result = new ArrayList<String>();
+		
 		try {
 			lotDao.connection();
 			ArrayList<LotInfDto> arr = lotDao.readByOper(oper);

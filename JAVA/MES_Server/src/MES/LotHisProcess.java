@@ -1,9 +1,7 @@
 package MES;
 
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class LotHisProcess {
 	private LotHisDao dao;
@@ -12,67 +10,22 @@ public class LotHisProcess {
 		dao = new LotHisDao();
 	}
 
-	public void addHis(String type, String addData) {
-		String lot = "", oper = "", flow = "", prod = "";
-		String txn_cd = "";
-		int prodQty = 0;
+	public void addHis(LotInfDto dto, String txn_cd) throws SQLException {
+		dao.connection();
 
-		try {
-			dao.connection();
+		LotHisDto dtoHis = new LotHisDto();
+		dtoHis.setLot(dto.getLot());
+		dtoHis.setTimekey(dto.getLastTimkey());
+		dtoHis.setOper(dto.getOper());
+		dtoHis.setFlow(dto.getFlow());
+		dtoHis.setProd(dto.getProd());
+		dtoHis.setProdQty(dto.getProdQty());
+		dtoHis.setProc(dto.getProc());
+		// CREATE, MOVEIN, MOVEOUT
+		dtoHis.setTxnCd(txn_cd);
 
-			String[] strParaList = addData.split(";");
-			for (int i = 0; i < strParaList.length; i++) {
-				String[] strParaValue = strParaList[i].split("=");
-				for (int j = 0; j < strParaValue.length; j++) {
-					if (strParaValue[j].equals("lot")) {
-						lot = strParaValue[1];
-						break;
-					} else if (strParaValue[j].equals("oper")) {
-						oper = strParaValue[1];
-						break;
-					} else if (strParaValue[j].equals("flow")) {
-						flow = strParaValue[1];
-						break;
-					} else if (strParaValue[j].equals("prod")) {
-						prod = strParaValue[1];
-						break;
-					} else if (strParaValue[j].equals("prod_qty")) {
-						prodQty = Integer.parseInt(strParaValue[1]);
-						break;
-					}
-				}
-			}
-
-			txn_cd = type;
-
-			Date date = new Date();
-			SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
-			String timeKey = format.format(date);
-
-			LotHisDto dto = new LotHisDto();
-			dto.setLot(lot);
-			dto.setOper(oper);
-			dto.setFlow(flow);
-			dto.setProd(prod);
-			dto.setProdQty(prodQty);
-			dto.setTimekey(timeKey);
-			dto.setTxnCd(txn_cd);
-
-			if (txn_cd.equals("CREATE")) {
-				dto.setProc("LoggedOut");
-				dao.add(dto);
-			} else if (txn_cd.equals("MOVEIN")) {
-				dto.setProc("LoggedIn");
-				dao.add(dto, addData);
-			} else if (txn_cd.equals("MOVEOUT")) {
-				dto.setProc("LoggedOut");
-				dao.add(dto, addData);
-			}
-			dao.close();
-		} catch (Exception e) {
-			// TODO: handle exception
-			System.out.println(e.toString());
-		}
+		dao.create(dtoHis);
+		dao.close();
 	}
 
 	// View Lot History

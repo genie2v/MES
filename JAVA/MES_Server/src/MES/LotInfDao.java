@@ -16,16 +16,16 @@ public class LotInfDao {
 		return conn;
 	}
 
-	// add
-	public int add(LotInfDto dto) throws SQLException {
+	// create
+	public int create(LotInfDto dto) throws SQLException {
 		int result = 0;
 
 		try {
 			Statement stmt = conn.createStatement();
 			String sql = String.format("insert into lot_inf (fac, lot, last_timekey, oper, flow, prod,"
 					+ "prod_qty, crt_tm, crt_user, chg_tm, chg_user, proc) values ('PKG', '%s', rpad('%s',20,'0'), '%s',"
-					+ "'%s', '%s', %d, sysdate, 'USER1', sysdate, 'USER1', 'LoggedOut' )", dto.getLot(),
-					dto.getLastTimkey(), dto.getOper(), dto.getFlow(), dto.getProd(), dto.getProdQty());
+					+ "'%s', '%s', %d, sysdate, 'USER1', sysdate, 'USER1', '%s' )", dto.getLot(),
+					dto.getLastTimkey(), dto.getOper(), dto.getFlow(), dto.getProd(), dto.getProdQty(), dto.getProc());
 			result = stmt.executeUpdate(sql);
 			
 			stmt.close();
@@ -120,6 +120,20 @@ public class LotInfDao {
 
 		stmt.close();
 
+		return result;
+	}
+	
+	//delete
+	public int delete(String lotId) throws SQLException {
+		int result = 0;
+		
+		Statement stmt = conn.createStatement();
+		String sql = String.format("delete from lot_inf where lot = '%s'", lotId);
+		
+		result = stmt.executeUpdate(sql);
+		
+		stmt.close();
+		
 		return result;
 	}
 
