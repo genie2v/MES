@@ -76,7 +76,7 @@ public class QueryServer {
 
 						for (int i = 0; i < arr.size(); i++) {
 							String response = arr.get(i);
-							System.out.println(response);
+//							System.out.println(response);
 							bufferedWriter.write(response);
 							bufferedWriter.newLine();
 							bufferedWriter.flush();
@@ -89,7 +89,7 @@ public class QueryServer {
 						
 						for(int i=0;i<arr.size();i++) {
 							String response = arr.get(i);
-							System.out.println(response);
+//							System.out.println(response);
 							bufferedWriter.write(response);
 							bufferedWriter.newLine();
 							bufferedWriter.flush();
@@ -112,7 +112,7 @@ public class QueryServer {
 						
 						for(int i=0;i<arr.size();i++) {
 							String response = arr.get(i);
-							System.out.println(response);
+//							System.out.println(response);
 							bufferedWriter.write(response);
 							bufferedWriter.newLine();
 							bufferedWriter.flush();
@@ -129,7 +129,7 @@ public class QueryServer {
 							}
 						}
 						String response = infProcess.getLotInf(lotId);
-						System.out.println(response);
+//						System.out.println(response);
 						bufferedWriter.write(response);
 						bufferedWriter.newLine();
 						bufferedWriter.flush();
