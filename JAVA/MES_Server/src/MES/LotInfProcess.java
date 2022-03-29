@@ -109,7 +109,7 @@ public class LotInfProcess {
 			dto.setProd(prod);
 			dto.setProdQty(prodQty);
 			dto.setLastTimekey(timeKey);
-			dto.setProc("LogggedOut");
+			dto.setProc("LoggedOut");
 
 			int result = lotDao.create(dto);
 			if (result == -1) {
