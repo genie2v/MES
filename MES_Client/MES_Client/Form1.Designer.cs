@@ -31,7 +31,7 @@
             this.btnCreateLot = new System.Windows.Forms.Button();
             this.btnViewLotList = new System.Windows.Forms.Button();
             this.btnViewLotHis = new System.Windows.Forms.Button();
-            this.button4 = new System.Windows.Forms.Button();
+            this.btnUndoLot = new System.Windows.Forms.Button();
             this.btnMoveIn = new System.Windows.Forms.Button();
             this.button6 = new System.Windows.Forms.Button();
             this.btnMoveOut = new System.Windows.Forms.Button();
@@ -71,14 +71,16 @@
             this.btnViewLotHis.UseVisualStyleBackColor = true;
             this.btnViewLotHis.Click += new System.EventHandler(this.btnViewLotHis_Click);
             // 
-            // button4
+            // btnUndoLot
             // 
-            this.button4.Location = new System.Drawing.Point(227, 81);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(206, 55);
-            this.button4.TabIndex = 3;
-            this.button4.Text = "button4";
-            this.button4.UseVisualStyleBackColor = true;
+            this.btnUndoLot.Font = new System.Drawing.Font("맑은 고딕", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.btnUndoLot.Location = new System.Drawing.Point(227, 81);
+            this.btnUndoLot.Name = "btnUndoLot";
+            this.btnUndoLot.Size = new System.Drawing.Size(206, 55);
+            this.btnUndoLot.TabIndex = 3;
+            this.btnUndoLot.Text = "Undo Lot";
+            this.btnUndoLot.UseVisualStyleBackColor = true;
+            this.btnUndoLot.Click += new System.EventHandler(this.btnUndoLot_Click);
             // 
             // btnMoveIn
             // 
@@ -129,7 +131,7 @@
             this.Controls.Add(this.btnMoveOut);
             this.Controls.Add(this.button6);
             this.Controls.Add(this.btnMoveIn);
-            this.Controls.Add(this.button4);
+            this.Controls.Add(this.btnUndoLot);
             this.Controls.Add(this.btnViewLotHis);
             this.Controls.Add(this.btnViewLotList);
             this.Controls.Add(this.btnCreateLot);
@@ -144,7 +146,7 @@
         private System.Windows.Forms.Button btnCreateLot;
         private System.Windows.Forms.Button btnViewLotList;
         private System.Windows.Forms.Button btnViewLotHis;
-        private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.Button btnUndoLot;
         private System.Windows.Forms.Button btnMoveIn;
         private System.Windows.Forms.Button button6;
         private System.Windows.Forms.Button btnMoveOut;

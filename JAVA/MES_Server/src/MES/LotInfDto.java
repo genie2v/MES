@@ -1,12 +1,14 @@
 package MES;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 
 public class LotInfDto {
 	private String fac, lot, last_timekey;
 	private String oper, flow, prod, proc;
 	private int prod_qty;
-	Date crt_tm, chg_tm;
+	Date crt_tm;
+	Timestamp chg_tm;
 	private String crt_user, chg_user;
 
 	public String getFac() {
@@ -89,11 +91,11 @@ public class LotInfDto {
 		this.crt_user = crt_user;
 	}
 
-	public Date getChgTm() {
+	public Timestamp getChgTm() {
 		return chg_tm;
 	}
 
-	public void setChgTm(Date chg_tm) {
+	public void setChgTm(Timestamp chg_tm) {
 		this.chg_tm = chg_tm;
 	}
 

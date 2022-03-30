@@ -12,7 +12,7 @@ using System.Windows.Forms;
 
 namespace MES_Client
 {
-    public partial class ViewLotHistory : Form
+    public partial class UndoLot : Form
     {
         DataTable dataTable = new DataTable();
 
@@ -26,12 +26,12 @@ namespace MES_Client
         StreamWriter queryWriter = null;
         StreamReader queryReader = null;
 
-        public ViewLotHistory()
+        public UndoLot()
         {
             InitializeComponent();
         }
 
-        public ViewLotHistory(TcpClient wip, TcpClient query)
+        public UndoLot(TcpClient wip, TcpClient query)
         {
             InitializeComponent();
 
@@ -45,8 +45,8 @@ namespace MES_Client
 
             dataGridView1.DataSource = dataTable;
 
-            tcQuery = query;
             tcWip = wip;
+            tcQuery = query;
 
             wipNs = tcWip.GetStream();
             wipWriter = new StreamWriter(wipNs);
@@ -55,34 +55,39 @@ namespace MES_Client
             queryNs = tcQuery.GetStream();
             queryWriter = new StreamWriter(queryNs);
             queryReader = new StreamReader(queryNs);
+
         }
 
         private void buttonSearch_Click(object sender, EventArgs e)
         {
-            //check
-            // para1 은 예시로 든 것, LOT_ID 같은 명시된 이름으로 넘겨야 헷갈리지 않는다
-            // queryWriter.WriteLine("action=get_his;LOT_ID=" + lotId);
-            String lotId = textBoxSearch.Text.ToString().ToUpper();
-            queryWriter.WriteLine("action=get_his;lot_id=" + lotId + ";orderby=asc");
+            String lotId = textBoxSearch.Text.ToUpper();
+            queryWriter.WriteLine("action=get_his;lot_id=" + lotId + ";orderby=desc");
             queryWriter.Flush();
-            getHis();
+            getHis();     
         }
 
-        void getHis() 
+        void getHis()
         {
             String count = queryReader.ReadLine();
-            //MessageBox.Show(count);
-            //String receive = "";
             dataTable.Rows.Clear();
             dataGridView1.DataSource = dataTable;
-            for(int i =0; i<Convert.ToInt16(count);i++)
+            for (int i = 0; i < Convert.ToInt16(count); i++)
             {
                 String receive = queryReader.ReadLine();
-                //MessageBox.Show(receive);
                 String[] his = receive.Split(',');
                 dataTable.Rows.Add(his[0], his[1], his[2], his[3], his[4], his[5], his[6]);
                 dataGridView1.DataSource = dataTable;
             }
+        }
+
+        private void btnRun_Click(object sender, EventArgs e)
+        {
+            String lotId = textBoxSearch.Text.ToUpper();
+            wipWriter.WriteLine("action=undo_lot;lot_id=" + lotId);
+            wipWriter.Flush();
+
+            String receive = wipReader.ReadLine();
+            MessageBox.Show(receive);
         }
     }
 }

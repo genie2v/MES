@@ -100,7 +100,9 @@ public class LotInfProcess {
 
 			Date date = new Date();
 			SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
+//			SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			String timeKey = format.format(date);
+//			java.sql.Date time = (java.sql.Date) format2.parse(timeKey);
 
 			LotInfDto dto = new LotInfDto();
 			dto.setLot(lot);
@@ -110,6 +112,7 @@ public class LotInfProcess {
 			dto.setProdQty(prodQty);
 			dto.setLastTimekey(timeKey);
 			dto.setProc("LoggedOut");
+//			dto.setCrtTm(time);
 
 			int result = lotDao.create(dto);
 			if (result == -1) {
@@ -305,6 +308,50 @@ public class LotInfProcess {
 		}
 
 		return result;
+	}
+
+	public String undoLot(String lotId) {
+		LotHisProcess hisProcess = new LotHisProcess();
+		String response = "";
+
+		try {
+			lotDao.connection();
+			LotInfDto dtoLot = lotDao.read(lotId);
+
+			if (dtoLot == null) {
+				// 존재하지 않는 lot으로 undo 시도하는 경우, 예외처리
+				response = "존재하지 않는 lot 입니다";
+				return response;
+			}
+
+			// 삭제 후 이전 이력 정보를 가져옴
+			LotHisDto dtoHis = hisProcess.deleteHis(dtoLot.getLot(), dtoLot.getLastTimkey());
+
+			if (dtoHis == null) {
+				// txn_cd = CREATE 또는 delete 하지 못했을 때
+				response = "삭제 불가";
+				return response;
+			}
+
+			dtoLot.setLastTimekey(dtoHis.getTimkey());
+			dtoLot.setOper(dtoHis.getOper());
+			dtoLot.setChgTm(dtoHis.getChgTm());
+			dtoLot.setChgUser(dtoHis.getChgUser());
+			dtoLot.setProc(dtoHis.getProc());
+			
+			int result = lotDao.updateUndo(dtoLot);
+			if (result == 0) {
+				response = "수정 불가";
+				return response;
+			}
+
+			response = "수정 완료";
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			System.out.println(e.toString());
+		}
+		return response;
 	}
 
 }

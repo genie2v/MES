@@ -57,26 +57,27 @@ public class QueryServer {
 						bufferedWriter.write(infProcess.getProd());
 						bufferedWriter.newLine();
 						bufferedWriter.flush();
-					}
-					else if (strAction.contains("get_his")) {
+					} else if (strAction.contains("get_his")) {
 						String lotId = "";
+						String orderby = "";
 						for (int i = 1; i < strParaList.length; i++) {
 							String[] strParaValue = strParaList[i].split("=");
 							for (int j = 0; j < strParaValue.length; j++) {
 								if (strParaValue[j].equals("lot_id")) {
 									lotId = strParaValue[1];
 									break;
+								} else if (strParaValue[j].equals("orderby")) {
+									orderby = strParaValue[1];
 								}
 							}
 						}
-						ArrayList<String> arr = hisProcess.getHis(lotId);
+						ArrayList<String> arr = hisProcess.getHis(lotId, orderby);
 						bufferedWriter.write(String.valueOf(arr.size()));
 						bufferedWriter.newLine();
 						bufferedWriter.flush();
 
 						for (int i = 0; i < arr.size(); i++) {
 							String response = arr.get(i);
-//							System.out.println(response);
 							bufferedWriter.write(response);
 							bufferedWriter.newLine();
 							bufferedWriter.flush();
@@ -86,10 +87,9 @@ public class QueryServer {
 						bufferedWriter.write(String.valueOf(arr.size()));
 						bufferedWriter.newLine();
 						bufferedWriter.flush();
-						
-						for(int i=0;i<arr.size();i++) {
+
+						for (int i = 0; i < arr.size(); i++) {
 							String response = arr.get(i);
-//							System.out.println(response);
 							bufferedWriter.write(response);
 							bufferedWriter.newLine();
 							bufferedWriter.flush();
@@ -109,10 +109,9 @@ public class QueryServer {
 						bufferedWriter.write(String.valueOf(arr.size()));
 						bufferedWriter.newLine();
 						bufferedWriter.flush();
-						
-						for(int i=0;i<arr.size();i++) {
+
+						for (int i = 0; i < arr.size(); i++) {
 							String response = arr.get(i);
-//							System.out.println(response);
 							bufferedWriter.write(response);
 							bufferedWriter.newLine();
 							bufferedWriter.flush();
@@ -129,7 +128,6 @@ public class QueryServer {
 							}
 						}
 						String response = infProcess.getLotInf(lotId);
-//						System.out.println(response);
 						bufferedWriter.write(response);
 						bufferedWriter.newLine();
 						bufferedWriter.flush();

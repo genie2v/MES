@@ -101,11 +101,6 @@ namespace MES_Client
             String prod = comboBoxProd.Text.ToString();
             String prod_qty = textBoxProdQty.Text.ToString();
 
-            //check
-            // DAO DTO 를 적용하면 바뀌어야할 부분
-            // name=value 형식으로 넘기도록 해야 한다
-            // ex) LOT_ID=LOT00001;OPER=1000;FLOW=FLOW-0001;PROD=PROD-XXXX-0001;PROD_QTY=1234
-
             String insertData = "lot="+id+";oper="+oper+";flow="+flow+";prod="+prod+";prod_qty="+prod_qty;
 
             wipWriter.WriteLine(insertData);

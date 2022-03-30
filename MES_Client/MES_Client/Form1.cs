@@ -53,6 +53,12 @@ namespace MES_Client
             moveOut.ShowDialog();
         }
 
+        private void btnUndoLot_Click(object sender, EventArgs e)
+        {
+            UndoLot undoLot = new UndoLot(tcWip, tcQuery);
+            undoLot.ShowDialog();
+        }
+
 
     }
 }

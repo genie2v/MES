@@ -12,3 +12,4 @@ C:\Users\jy\Documents\MES\MES_Client\MES_Client\obj\Debug\MES_Client.ViewLotHist
 C:\Users\jy\Documents\MES\MES_Client\MES_Client\obj\Debug\MES_Client.ViewLotList.resources
 C:\Users\jy\Documents\MES\MES_Client\MES_Client\obj\Debug\MES_Client.MoveIn.resources
 C:\Users\jy\Documents\MES\MES_Client\MES_Client\obj\Debug\MES_Client.MoveOut.resources
+C:\Users\jy\Documents\MES\MES_Client\MES_Client\obj\Debug\MES_Client.UndoLot.resources
