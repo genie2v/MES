@@ -325,11 +325,14 @@ public class LotInfProcess {
 			}
 
 			// 삭제 후 이전 이력 정보를 가져옴
-			LotHisDto dtoHis = hisProcess.deleteHis(dtoLot.getLot(), dtoLot.getLastTimkey());
+			// LOT_HIS에서 삭제
+//			 LotHisDto dtoHis = hisProcess.deleteHis(dtoLot.getLot(), dtoLot.getLastTimkey());
+			// LOT_HIS, CANCEL_TYPE 변경
+			LotHisDto dtoHis = hisProcess.updateCancel(dtoLot.getLot(), dtoLot.getLastTimkey());
 
 			if (dtoHis == null) {
 				// txn_cd = CREATE 또는 delete 하지 못했을 때
-				response = "삭제 불가";
+				response = "되돌리기 불가";
 				return response;
 			}
 
@@ -338,7 +341,7 @@ public class LotInfProcess {
 			dtoLot.setChgTm(dtoHis.getChgTm());
 			dtoLot.setChgUser(dtoHis.getChgUser());
 			dtoLot.setProc(dtoHis.getProc());
-			
+
 			int result = lotDao.updateUndo(dtoLot);
 			if (result == 0) {
 				response = "수정 불가";

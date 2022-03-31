@@ -45,6 +45,11 @@ namespace MES_Client
 
             dataGridView1.DataSource = dataTable;
 
+            foreach (DataGridViewColumn item in dataGridView1.Columns)
+            {
+                item.SortMode = DataGridViewColumnSortMode.NotSortable;
+            }
+
             tcWip = wip;
             tcQuery = query;
 
@@ -63,7 +68,7 @@ namespace MES_Client
             String lotId = textBoxSearch.Text.ToUpper();
             queryWriter.WriteLine("action=get_his;lot_id=" + lotId + ";orderby=desc");
             queryWriter.Flush();
-            getHis();     
+            getHis();
         }
 
         void getHis()
@@ -75,9 +80,11 @@ namespace MES_Client
             {
                 String receive = queryReader.ReadLine();
                 String[] his = receive.Split(',');
+                if (his[7].Equals("C")) continue;
                 dataTable.Rows.Add(his[0], his[1], his[2], his[3], his[4], his[5], his[6]);
                 dataGridView1.DataSource = dataTable;
             }
+            dataGridView1.CurrentCell = null;
         }
 
         private void btnRun_Click(object sender, EventArgs e)

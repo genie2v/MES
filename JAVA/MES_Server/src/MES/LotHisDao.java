@@ -21,9 +21,10 @@ public class LotHisDao {
 		try {
 			Statement stmt = conn.createStatement();
 			String sql = String.format("insert into lot_his (fac, lot, timekey, oper, flow, prod,"
-					+ "prod_qty, crt_tm, crt_user, chg_tm, chg_user, proc, txn_cd) values ('PKG', '%s', rpad('%s',20,'0'), '%s',"
-					+ "'%s', '%s', %d, sysdate, 'USER1', sysdate, 'USER1', '%s', '%s' )", dto.getLot(), dto.getTimkey(),
-					dto.getOper(), dto.getFlow(), dto.getProd(), dto.getProdQty(), dto.getProc(), dto.getTxnCd());
+					+ "prod_qty, crt_tm, crt_user, chg_tm, chg_user, proc, txn_cd, cancel_type) values ('PKG', '%s', rpad('%s',20,'0'), '%s',"
+					+ "'%s', '%s', %d, sysdate, 'USER1', sysdate, 'USER1', '%s', '%s', 'A')", dto.getLot(),
+					dto.getTimkey(), dto.getOper(), dto.getFlow(), dto.getProd(), dto.getProdQty(), dto.getProc(),
+					dto.getTxnCd());
 
 			stmt.executeQuery(sql);
 			stmt.close();
@@ -59,6 +60,7 @@ public class LotHisDao {
 //			dto.setChgTm(rs.getDate("chg_tm"));
 			dto.setChgTm(rs.getTimestamp("chg_tm"));
 			dto.setChgUser(rs.getString("chg_user"));
+			dto.setCancelType(rs.getString("cancel_type"));
 
 			break;
 		}
@@ -73,7 +75,7 @@ public class LotHisDao {
 	public LotHisDto read(String lotId) throws SQLException {
 		LotHisDto dto = null;
 		Statement stmt = conn.createStatement();
-		String sql = String.format("select * from lot_his where lot = '%s' and rownum = 1 order by timekey desc",
+		String sql = String.format("select * from lot_his where lot = '%s' and cancel_type = 'A' and rownum = 1 order by timekey desc",
 				lotId);
 
 		ResultSet rs = stmt.executeQuery(sql);
@@ -94,6 +96,7 @@ public class LotHisDao {
 //			dto.setChgTm(rs.getDate("chg_tm"));
 			dto.setChgTm(rs.getTimestamp("chg_tm"));
 			dto.setChgUser(rs.getString("chg_user"));
+			dto.setCancelType(rs.getString("cancel_type"));
 
 			break;
 		}
@@ -110,8 +113,9 @@ public class LotHisDao {
 		LotHisDto dto = null;
 
 		Statement stmt = conn.createStatement();
-		String sql = String.format("select * from lot_his where lot = '%s' order by timekey %s", lotId, orderby);
-
+		String sql = String.format("select * from lot_his where lot = '%s' order by timekey %s",
+				lotId, orderby);
+		
 		ResultSet rs = stmt.executeQuery(sql);
 		while (rs.next()) {
 			dto = new LotHisDto();
@@ -130,6 +134,7 @@ public class LotHisDao {
 			dto.setProdQty(rs.getInt("prod_qty"));
 			dto.setProc(rs.getString("proc"));
 			dto.setTxnCd(rs.getString("txn_cd"));
+			dto.setCancelType(rs.getString("cancel_type"));
 
 			result.add(dto);
 		}
@@ -146,7 +151,7 @@ public class LotHisDao {
 
 		Statement stmt = conn.createStatement();
 		String sql = String.format(
-				"update lot_his set oper = '%s', flow = '%s', prod = '%s', prod_qty = %d, proc ='%s', txn_cd = '%s' where lot = '%s' and timekey = '%s'",
+				"update lot_his set oper = '%s', flow = '%s', prod = '%s', prod_qty = %d, proc ='%s', txn_cd = '%s', cancel_type = 'C' where lot = '%s' and timekey = '%s'",
 				dto.getOper(), dto.getFlow(), dto.getProd(), dto.getProdQty(), dto.getProc(), dto.getTxnCd(),
 				dto.getLot(), dto.getTimkey());
 

@@ -45,6 +45,11 @@ namespace MES_Client
 
             dataGridView1.DataSource = dataTable;
 
+            foreach (DataGridViewColumn item in dataGridView1.Columns)
+            {
+                item.SortMode = DataGridViewColumnSortMode.NotSortable;
+            }
+
             tcQuery = query;
             tcWip = wip;
 
@@ -59,30 +64,56 @@ namespace MES_Client
 
         private void buttonSearch_Click(object sender, EventArgs e)
         {
-            //check
-            // para1 은 예시로 든 것, LOT_ID 같은 명시된 이름으로 넘겨야 헷갈리지 않는다
-            // queryWriter.WriteLine("action=get_his;LOT_ID=" + lotId);
-            String lotId = textBoxSearch.Text.ToString().ToUpper();
-            queryWriter.WriteLine("action=get_his;lot_id=" + lotId + ";orderby=asc");
-            queryWriter.Flush();
-            getHis();
+            if (!checkBox1.Checked)
+            {
+                String lotId = textBoxSearch.Text.ToString().ToUpper();
+                queryWriter.WriteLine("action=get_his;lot_id=" + lotId + ";orderby=desc");
+                queryWriter.Flush();
+                getHis();
+            }
+            else
+            {
+                String lotId = textBoxSearch.Text.ToString().ToUpper();
+                queryWriter.WriteLine("action=get_his;lot_id=" + lotId + ";orderby=desc");
+                queryWriter.Flush();
+                getUndoHis();
+            }
         }
 
-        void getHis() 
+        void getHis()
         {
             String count = queryReader.ReadLine();
-            //MessageBox.Show(count);
-            //String receive = "";
+
             dataTable.Rows.Clear();
             dataGridView1.DataSource = dataTable;
-            for(int i =0; i<Convert.ToInt16(count);i++)
+            for (int i = 0; i < Convert.ToInt16(count); i++)
             {
                 String receive = queryReader.ReadLine();
-                //MessageBox.Show(receive);
                 String[] his = receive.Split(',');
+                if (his[7].Equals("C")) continue;
                 dataTable.Rows.Add(his[0], his[1], his[2], his[3], his[4], his[5], his[6]);
                 dataGridView1.DataSource = dataTable;
             }
+            dataGridView1.CurrentCell = null;
+        }
+
+        void getUndoHis()
+        {
+            String count = queryReader.ReadLine();
+            dataTable.Rows.Clear();
+            dataGridView1.DataSource = dataTable;
+            for (int i = 0; i < Convert.ToInt16(count); i++)
+            {
+                String receive = queryReader.ReadLine();
+                String[] his = receive.Split(',');
+                dataTable.Rows.Add(his[0], his[1], his[2], his[3], his[4], his[5], his[6]);
+                if (his[7].Equals("C"))
+                {
+                    dataGridView1.Rows[i].DefaultCellStyle.Font = new Font(this.Font, FontStyle.Strikeout);
+                }
+                dataGridView1.DataSource = dataTable;
+            }
+            dataGridView1.CurrentCell = null;
         }
     }
 }

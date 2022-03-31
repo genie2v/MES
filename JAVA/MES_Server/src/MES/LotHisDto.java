@@ -11,6 +11,7 @@ public class LotHisDto {
 	Date crt_tm;
 	Timestamp chg_tm;
 	private String crt_user, chg_user;
+	private String cancel_type;
 
 	public String getFac() {
 		return fac;
@@ -114,5 +115,13 @@ public class LotHisDto {
 
 	public void setChgUser(String chg_user) {
 		this.chg_user = chg_user;
+	}
+
+	public String getCancelType() {
+		return cancel_type;
+	}
+
+	public void setCancelType(String cancel_type) {
+		this.cancel_type = cancel_type;
 	}
 }

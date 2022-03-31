@@ -30,19 +30,52 @@ public class LotHisProcess {
 
 	public LotHisDto deleteHis(String lotId, String timeKey) {
 		LotHisDto dto = null;
-		
+
 		try {
 			dao.connection();
 
 			dto = dao.read(lotId, timeKey);
+
+			if (dto.getTxnCd().equals("CREATE")) {
+				// System.out.println("CREATE");
+				dto = null;
+				return dto;
+			}
+
+			int result = dao.delete(dto.getLot(), dto.getTimkey());
+			if (result == 0) {
+				dto = null;
+				return dto;
+			}
+
+			String lot = dto.getLot();
+			dto = null;
+			dto = dao.read(lot);
+
+			return dto;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return dto;
+	}
+
+	public LotHisDto updateCancel(String lotId, String timekey) {
+		LotHisDto dto = null;
+
+		try {
+			dao.connection();
 			
-			if(dto.getTxnCd().equals("CREATE")) {
+			dto = dao.read(lotId, timekey);
+			
+			if (dto.getTxnCd().equals("CREATE")) {
 				// System.out.println("CREATE");
 				dto = null;
 				return dto;
 			}
 			
-			int result = dao.delete(dto.getLot(), dto.getTimkey());			
+			int result = dao.update(dto);
 			if(result == 0) {
 				dto = null;
 				return dto;
@@ -53,11 +86,11 @@ public class LotHisProcess {
 			dto = dao.read(lot);
 			
 			return dto;
+			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
 		return dto;
 	}
 
@@ -70,7 +103,7 @@ public class LotHisProcess {
 
 			for (LotHisDto obj : arr) {
 				String his = obj.getLot() + "," + obj.getOper() + "," + obj.getFlow() + "," + obj.getProd() + ","
-						+ String.valueOf(obj.getProdQty() + "," + obj.getProc() + "," + obj.getTxnCd());
+						+ String.valueOf(obj.getProdQty()) + "," + obj.getProc() + "," + obj.getTxnCd() + "," + obj.getCancelType();
 				response.add(his);
 			}
 			dao.close();

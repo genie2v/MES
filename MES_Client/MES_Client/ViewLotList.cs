@@ -42,6 +42,11 @@ namespace MES_Client
 
             dataGridView1.DataSource = dataTable;
 
+            foreach (DataGridViewColumn item in dataGridView1.Columns)
+            {
+                item.SortMode = DataGridViewColumnSortMode.NotSortable;
+            }
+
             dataTable2.Columns.Add("LOT", typeof(String));
             dataTable2.Columns.Add("Oper", typeof(String));
             dataTable2.Columns.Add("Flow", typeof(String));
@@ -49,6 +54,11 @@ namespace MES_Client
             dataTable2.Columns.Add("Prod Qty", typeof(String));
 
             dataGridView2.DataSource = dataTable2;
+
+            foreach (DataGridViewColumn item in dataGridView2.Columns)
+            {
+                item.SortMode = DataGridViewColumnSortMode.NotSortable;
+            }
 
             tcQuery = query;
             tcWip = wip;
@@ -96,7 +106,7 @@ namespace MES_Client
             String count = queryReader.ReadLine();
 
             dataTable2.Rows.Clear();
-            dataGridView2.DataSource = dataTable;
+            dataGridView2.DataSource = dataTable2;
 
             for (int i = 0; i < Convert.ToInt16(count); i++)
             {
@@ -105,6 +115,7 @@ namespace MES_Client
                 dataTable2.Rows.Add(lotlist[0], lotlist[1], lotlist[2], lotlist[3], lotlist[4]);
                 dataGridView2.DataSource = dataTable2;
             }
+            dataGridView2.CurrentCell = null;
         }
     }
 }
