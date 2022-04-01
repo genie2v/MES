@@ -33,9 +33,7 @@
             this.btnViewLotHis = new System.Windows.Forms.Button();
             this.btnUndoLot = new System.Windows.Forms.Button();
             this.btnMoveIn = new System.Windows.Forms.Button();
-            this.button6 = new System.Windows.Forms.Button();
             this.btnMoveOut = new System.Windows.Forms.Button();
-            this.button8 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnCreateLot
@@ -93,19 +91,10 @@
             this.btnMoveIn.UseVisualStyleBackColor = true;
             this.btnMoveIn.Click += new System.EventHandler(this.btnMoveIn_Click);
             // 
-            // button6
-            // 
-            this.button6.Location = new System.Drawing.Point(227, 142);
-            this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(206, 55);
-            this.button6.TabIndex = 5;
-            this.button6.Text = "button6";
-            this.button6.UseVisualStyleBackColor = true;
-            // 
             // btnMoveOut
             // 
             this.btnMoveOut.Font = new System.Drawing.Font("맑은 고딕", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.btnMoveOut.Location = new System.Drawing.Point(12, 203);
+            this.btnMoveOut.Location = new System.Drawing.Point(227, 142);
             this.btnMoveOut.Name = "btnMoveOut";
             this.btnMoveOut.Size = new System.Drawing.Size(206, 55);
             this.btnMoveOut.TabIndex = 6;
@@ -113,23 +102,12 @@
             this.btnMoveOut.UseVisualStyleBackColor = true;
             this.btnMoveOut.Click += new System.EventHandler(this.btnMoveOut_Click);
             // 
-            // button8
-            // 
-            this.button8.Location = new System.Drawing.Point(227, 203);
-            this.button8.Name = "button8";
-            this.button8.Size = new System.Drawing.Size(206, 55);
-            this.button8.TabIndex = 7;
-            this.button8.Text = "button8";
-            this.button8.UseVisualStyleBackColor = true;
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(445, 511);
-            this.Controls.Add(this.button8);
+            this.ClientSize = new System.Drawing.Size(445, 219);
             this.Controls.Add(this.btnMoveOut);
-            this.Controls.Add(this.button6);
             this.Controls.Add(this.btnMoveIn);
             this.Controls.Add(this.btnUndoLot);
             this.Controls.Add(this.btnViewLotHis);
@@ -148,9 +126,7 @@
         private System.Windows.Forms.Button btnViewLotHis;
         private System.Windows.Forms.Button btnUndoLot;
         private System.Windows.Forms.Button btnMoveIn;
-        private System.Windows.Forms.Button button6;
         private System.Windows.Forms.Button btnMoveOut;
-        private System.Windows.Forms.Button button8;
     }
 }
 
